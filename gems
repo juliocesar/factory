@@ -1,0 +1,5 @@
+# Gems needed for development
+# ===========================
+
+rack
+compass
