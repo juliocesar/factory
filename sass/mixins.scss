@@ -1,0 +1,9 @@
+// Mixins
+// ======
+
+@mixin transition($prop, $time, $alg) {
+  -webkit-transition: $prop $time $alg;
+  -moz-transition: $prop $time $alg;
+  -ms-transition: $prop $time $alg;
+  transition: $prop $time $alg;
+}
