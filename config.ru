@@ -35,7 +35,7 @@ require 'rack'
 
 module StaticApp ; extend self
 
-  FileServer = Rack::File.new Dir.pwd
+  FileServer = Rack::File.new Dir.pwd + '/public'
 
   def call(env)
     # Serve the file if it exists
