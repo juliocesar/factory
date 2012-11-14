@@ -12,10 +12,16 @@ body.theme-default {
   color: $text-color;
 
   .authoring {
+    @include box-shadow(inset -.1rem 0 .5rem lighten($text-color, 30%));
     background-color: darken($background-color, 5%);
 
     menu button {
+      @include transition(color, 0.25s, linear);
       color: rgba($text-color, .6);
+
+      &:hover {
+        color: $text-color;
+      }
     }
 
     textarea {
