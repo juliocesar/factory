@@ -6,16 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow">
     <link rel="stylesheet" href="/stylesheets/factory.css" media="screen">
   </head>
-  <body>
+  <body class="editing">
     <section class="authoring">
+      <menu>
+        <button class="new-slide icon-file section-visible"></button>
+        <button class="show-slides icon-plus"></button>
+      </menu>
       <section class="slides"></section>
-      <section class="writing"></section>
+      <section class="write visible">
+        <form>
+          <textarea>
+# Welcome
+
+Edit this slide
+          </textarea>
+        </form>
+      </section>
     </section>
     <section class="slide">
     </section>
-    <script src="/javascripts/jquery-1.8.2.min.js"</script>
+    <script src="/javascripts/jquery-1.8.2.min.js"></script>
     <script src="/javascripts/factory.js"></script>
   </body>
 </html>
