@@ -1181,13 +1181,17 @@ body.theme-default {
   background-color: #dee0e1;
   color: #727476;
 }
-/* line 11, ../../sass/themes.scss */
+/* line 14, ../../sass/themes.scss */
 body.theme-default .authoring {
   background-color: #d1d3d5;
 }
-/* line 14, ../../sass/themes.scss */
+/* line 17, ../../sass/themes.scss */
 body.theme-default .authoring menu button {
   color: rgba(114, 116, 118, 0.6);
+}
+/* line 21, ../../sass/themes.scss */
+body.theme-default .authoring textarea {
+  color: #656769;
 }
 
 /* line 4, ../../sass/type.scss */

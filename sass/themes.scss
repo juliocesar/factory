@@ -5,14 +5,21 @@
 
 // Factory
 body.theme-default {
+  $background-color: #dee0e1;
+  $text-color: #727476;
+
   background-color: #dee0e1;
-  color: #727476;
+  color: $text-color;
 
   .authoring {
-    background-color: darken(#dee0e1, 5%);
+    background-color: darken($background-color, 5%);
 
     menu button {
-      color: rgba(#727476, .6);
+      color: rgba($text-color, .6);
+    }
+
+    textarea {
+      color: darken($text-color, 5%);
     }
   }
 }
