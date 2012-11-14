@@ -1,0 +1,15 @@
+// Font family and sizes
+// =====================
+
+body, input, select, button, textarea {
+  font-family: 'PT Sans Narrow', 'Helvetica Neue', sans-serif
+}
+
+h1 { font-size: 1.9rem }
+
+.authoring {
+  menu button { font-size: 1.2rem }
+  textarea {
+    font-size: 1rem;
+  }
+}

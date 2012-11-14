@@ -1,2 +1,85 @@
 @import 'font-awesome';
+@import 'normalization';
 @import 'themes';
+@import 'type';
+
+// Global stuff
+
+body {
+  background-color: $theme-factory-page-background;
+  color: $theme-factory-default-text;
+}
+
+// ---
+
+// Structure
+
+$page-padding: .6rem;
+
+html, body { height: 100%; overflow: hidden }
+
+.authoring, .slide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.authoring  { left: 0 }
+.slide      { right: 0 }
+
+body.editing {
+  .authoring { width: 40% }
+  .slide     { left: 40% }
+}
+
+
+// ---
+
+// Authoring
+
+.authoring {
+  padding-top: $page-padding * 3;
+
+  background-color: darken($theme-factory-page-background, 5%);
+
+  &>section {
+    display: none;
+    padding: $page-padding * 2;
+
+    &.visible {
+      display: block
+    }
+  }
+
+
+  menu {
+    position: absolute;
+    top: $page-padding;
+    left: $page-padding;
+
+    button {
+      border: 0;
+      background: transparent;
+      color: rgba($theme-factory-default-text, .6);
+
+      &.section-visible {
+        color: $theme-factory-default-text;
+      }
+
+    }
+  }
+
+  .write {
+    textarea {
+      width: 100%;
+      border: 0;
+      background: transparent;
+
+    }
+
+  }
+
+}
+
+
+
