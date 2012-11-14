@@ -3,15 +3,6 @@
 @import 'themes';
 @import 'type';
 
-// Global stuff
-
-body {
-  background-color: $theme-factory-page-background;
-  color: $theme-factory-default-text;
-}
-
-// ---
-
 // Structure
 
 $page-padding: .6rem;
@@ -38,9 +29,7 @@ body.editing {
 // Authoring
 
 .authoring {
-  padding-top: $page-padding * 3;
-
-  background-color: darken($theme-factory-page-background, 5%);
+  padding-top: $page-padding * 4;
 
   &>section {
     display: none;
@@ -60,25 +49,19 @@ body.editing {
     button {
       border: 0;
       background: transparent;
-      color: rgba($theme-factory-default-text, .6);
-
-      &.section-visible {
-        color: $theme-factory-default-text;
-      }
-
     }
   }
 
-  .write {
-    textarea {
+  .writing {
+    height: 100%;
+
+    form, form textarea {
+      height: 100%;
       width: 100%;
       border: 0;
       background: transparent;
-
     }
-
   }
-
 }
 
 

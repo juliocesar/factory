@@ -1165,6 +1165,7 @@ body {
 
 /* line 14, ../../sass/normalization.scss */
 textarea {
+  padding: 0;
   resize: none;
   outline: none;
 }
@@ -1173,6 +1174,20 @@ textarea {
 menu {
   padding: 0;
   margin: 0;
+}
+
+/* line 7, ../../sass/themes.scss */
+body.theme-default {
+  background-color: #dee0e1;
+  color: #727476;
+}
+/* line 11, ../../sass/themes.scss */
+body.theme-default .authoring {
+  background-color: #d1d3d5;
+}
+/* line 14, ../../sass/themes.scss */
+body.theme-default .authoring menu button {
+  color: rgba(114, 116, 118, 0.6);
 }
 
 /* line 4, ../../sass/type.scss */
@@ -1194,76 +1209,69 @@ h1 {
   font-size: 1rem;
 }
 
-/* line 8, ../../sass/factory.scss */
-body {
-  background-color: #dee0e1;
-  color: #727476;
-}
-
-/* line 19, ../../sass/factory.scss */
+/* line 10, ../../sass/factory.scss */
 html, body {
   height: 100%;
   overflow: hidden;
 }
 
-/* line 21, ../../sass/factory.scss */
+/* line 12, ../../sass/factory.scss */
 .authoring, .slide {
   position: absolute;
   top: 0;
   bottom: 0;
 }
 
-/* line 27, ../../sass/factory.scss */
+/* line 18, ../../sass/factory.scss */
 .authoring {
   left: 0;
 }
 
-/* line 28, ../../sass/factory.scss */
+/* line 19, ../../sass/factory.scss */
 .slide {
   right: 0;
 }
 
-/* line 31, ../../sass/factory.scss */
+/* line 22, ../../sass/factory.scss */
 body.editing .authoring {
   width: 40%;
 }
-/* line 32, ../../sass/factory.scss */
+/* line 23, ../../sass/factory.scss */
 body.editing .slide {
   left: 40%;
 }
 
-/* line 40, ../../sass/factory.scss */
+/* line 31, ../../sass/factory.scss */
 .authoring {
-  padding-top: 1.8rem;
-  background-color: #d1d3d5;
+  padding-top: 2.4rem;
 }
-/* line 45, ../../sass/factory.scss */
+/* line 34, ../../sass/factory.scss */
 .authoring > section {
   display: none;
   padding: 1.2rem;
 }
-/* line 49, ../../sass/factory.scss */
+/* line 38, ../../sass/factory.scss */
 .authoring > section.visible {
   display: block;
 }
-/* line 55, ../../sass/factory.scss */
+/* line 44, ../../sass/factory.scss */
 .authoring menu {
   position: absolute;
   top: 0.6rem;
   left: 0.6rem;
 }
-/* line 60, ../../sass/factory.scss */
+/* line 49, ../../sass/factory.scss */
 .authoring menu button {
   border: 0;
   background: transparent;
-  color: rgba(114, 116, 118, 0.6);
 }
-/* line 65, ../../sass/factory.scss */
-.authoring menu button.section-visible {
-  color: #727476;
+/* line 55, ../../sass/factory.scss */
+.authoring .writing {
+  height: 100%;
 }
-/* line 73, ../../sass/factory.scss */
-.authoring .write textarea {
+/* line 58, ../../sass/factory.scss */
+.authoring .writing form, .authoring .writing form textarea {
+  height: 100%;
   width: 100%;
   border: 0;
   background: transparent;

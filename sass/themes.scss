@@ -1,8 +1,19 @@
+@import 'compass/css3/box-shadow';
+
 // Themes
 // ======
 
 // Factory
-$theme-factory-page-background: #dee0e1;
-$theme-factory-default-text: #727476;
+body.theme-default {
+  background-color: #dee0e1;
+  color: #727476;
 
-// ...
+  .authoring {
+    background-color: darken(#dee0e1, 5%);
+
+    menu button {
+      color: rgba(#727476, .6);
+    }
+  }
+}
+
