@@ -5,11 +5,23 @@ body, input, select, button, textarea {
   font-family: 'PT Sans Narrow', 'Helvetica Neue', sans-serif
 }
 
-h1 { font-size: 1.9rem }
-
 .authoring {
   menu button { font-size: 1.2rem }
   textarea {
     font-size: 1rem;
+  }
+}
+
+.slide {
+  margin: 0;
+
+  h1 {
+    margin: 0 0 .6rem 0;
+    font-size: 3.4rem;
+  }
+
+  p {
+    margin: 0 0 .6rem 0;
+    font-size: 1.6rem;
   }
 }

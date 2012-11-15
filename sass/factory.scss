@@ -10,18 +10,18 @@ $page-padding: .6rem;
 
 html, body { height: 100%; overflow: hidden }
 
-.authoring, .slide {
+.authoring, .slide-container {
   position: absolute;
   top: 0;
   bottom: 0;
 }
 
-.authoring  { left: 0 }
-.slide      { right: 0 }
+.authoring       { left: 0 }
+.slide-container { right: 0 }
 
 body.editing {
-  .authoring { width: 40% }
-  .slide     { left: 40% }
+  .authoring       { width: 40% }
+  .slide-container { left: 40% }
 }
 
 
@@ -69,5 +69,18 @@ body.editing {
   }
 }
 
+// ---
 
+// Slide container
 
+.slide-container {
+  margin: 0 1rem 0 1rem;
+
+  .slide {
+    @include translate(-50%, -75%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%
+  }
+}

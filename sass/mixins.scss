@@ -5,5 +5,12 @@
   -webkit-transition: $prop $time $alg;
   -moz-transition: $prop $time $alg;
   -ms-transition: $prop $time $alg;
-  transition: $prop $time $alg;
+  transition: $prop $time $alg
+}
+
+@mixin translate($x, $y) {
+  -webkit-transform: translate($x, $y);
+  -moz-transform: translate($x, $y);
+  -ms-transform: translate($x, $y);
+  transform: translate($x, $y)
 }

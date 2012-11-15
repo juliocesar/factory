@@ -4,7 +4,11 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  DEFAULT_SLIDE = "# Introducing Factory\n\nFactory is an in-browser slide creation and\npublishing too.";
+  window.Factory = {};
+
+  _.extend(Factory, Backbone.Events);
+
+  DEFAULT_SLIDE = "# Introducing Factory\n\nFactory is an in-browser slide creation and\npublishing tool.";
 
   Editor = (function(_super) {
 
@@ -15,11 +19,19 @@
     }
 
     Editor.prototype.initialize = function() {
-      return this.loadFixture();
+      this.loadFixture();
+      return this.trackTextAreaChanges();
     };
 
     Editor.prototype.loadFixture = function() {
       return this.$el.val(DEFAULT_SLIDE);
+    };
+
+    Editor.prototype.trackTextAreaChanges = function() {
+      var _this = this;
+      return this.$el.on('keyup change cut paste', function() {
+        return Factory.trigger('editor:updated', _this.$el.val());
+      });
     };
 
     return Editor;
@@ -35,16 +47,29 @@
     }
 
     SlideViewer.prototype.initialize = function() {
-      return this.newSlide();
+      var _this = this;
+      this.newSlide();
+      return Factory.on('editor:updated', function(markdown) {
+        return _this.updateSlide(markdown);
+      });
     };
 
     SlideViewer.prototype.newSlide = function() {
       var $slide;
       this.$el.empty();
-      $slide = $(this.make('div', {
+      this._currentSlide = $slide = $(this.make('div', {
         "class": 'slide'
       }));
       return this.$el.append($slide);
+    };
+
+    SlideViewer.prototype.currentSlide = function() {
+      var _ref;
+      return (_ref = this._currentSlide) != null ? _ref : this._currentSlide = this.$el.find('.slide');
+    };
+
+    SlideViewer.prototype.updateSlide = function(markdown) {
+      return this.currentSlide().html(marked(markdown));
     };
 
     return SlideViewer;
@@ -52,13 +77,13 @@
   })(Backbone.View);
 
   $(function() {
-    window.Factory = {};
     Factory.Editor = new Editor({
       el: $('.writing textarea')
     });
-    return Factory.SlideViewer = new SlideViewer({
+    Factory.SlideViewer = new SlideViewer({
       el: $('.slide-container')
     });
+    return Factory.trigger('editor:updated', $('.writing textarea').val());
   });
 
 }).call(this);

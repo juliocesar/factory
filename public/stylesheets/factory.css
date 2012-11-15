@@ -1215,18 +1215,28 @@ body, input, select, button, textarea {
   font-family: "PT Sans Narrow", "Helvetica Neue", sans-serif;
 }
 
-/* line 8, ../../sass/type.scss */
-h1 {
-  font-size: 1.9rem;
-}
-
-/* line 11, ../../sass/type.scss */
+/* line 9, ../../sass/type.scss */
 .authoring menu button {
   font-size: 1.2rem;
 }
-/* line 12, ../../sass/type.scss */
+/* line 10, ../../sass/type.scss */
 .authoring textarea {
   font-size: 1rem;
+}
+
+/* line 15, ../../sass/type.scss */
+.slide {
+  margin: 0;
+}
+/* line 18, ../../sass/type.scss */
+.slide h1 {
+  margin: 0 0 .6rem 0;
+  font-size: 3.4rem;
+}
+/* line 23, ../../sass/type.scss */
+.slide p {
+  margin: 0 0 .6rem 0;
+  font-size: 1.6rem;
 }
 
 /* line 11, ../../sass/factory.scss */
@@ -1236,7 +1246,7 @@ html, body {
 }
 
 /* line 13, ../../sass/factory.scss */
-.authoring, .slide {
+.authoring, .slide-container {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -1248,7 +1258,7 @@ html, body {
 }
 
 /* line 20, ../../sass/factory.scss */
-.slide {
+.slide-container {
   right: 0;
 }
 
@@ -1257,7 +1267,7 @@ body.editing .authoring {
   width: 40%;
 }
 /* line 24, ../../sass/factory.scss */
-body.editing .slide {
+body.editing .slide-container {
   left: 40%;
 }
 
@@ -1299,4 +1309,20 @@ body.editing .slide {
 /* line 67, ../../sass/factory.scss */
 .authoring .slides {
   margin: 0;
+}
+
+/* line 76, ../../sass/factory.scss */
+.slide-container {
+  margin: 0 1rem 0 1rem;
+}
+/* line 79, ../../sass/factory.scss */
+.slide-container .slide {
+  -webkit-transform: translate(-50%, -75%);
+  -moz-transform: translate(-50%, -75%);
+  -ms-transform: translate(-50%, -75%);
+  transform: translate(-50%, -75%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
 }
