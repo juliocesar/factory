@@ -1296,3 +1296,7 @@ body.editing .slide {
   border: 0;
   background: transparent;
 }
+/* line 67, ../../sass/factory.scss */
+.authoring .slides {
+  margin: 0;
+}
