@@ -1230,12 +1230,12 @@ body, input, select, button, textarea {
 }
 /* line 18, ../../sass/type.scss */
 .slide h1 {
-  margin: 0 0 .6rem 0;
+  margin: 0 0 1.2rem 0;
   font-size: 3.4rem;
 }
 /* line 23, ../../sass/type.scss */
 .slide p {
-  margin: 0 0 .6rem 0;
+  margin: 1.2rem 0 1.2rem 0;
   font-size: 1.6rem;
 }
 
