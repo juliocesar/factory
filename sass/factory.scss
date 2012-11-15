@@ -87,7 +87,7 @@ body.editing {
 // Slide container
 
 .slide-container {
-  margin: 0 1rem 0 1rem;
+  margin: 0 $page-padding*2 0 $page-padding*2;
 
   .slide {
     @include translate(-50%, -75%);
