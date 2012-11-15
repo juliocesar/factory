@@ -32,6 +32,7 @@ class Editor extends Backbone.View
     @$el.on 'keyup change cut paste', =>
       Factory.trigger 'editor:updated', @$el.val()
 
+# ---
 
 # The right-hand part where the current slide gets shown.
 class SlideViewer extends Backbone.View
@@ -56,16 +57,25 @@ class SlideViewer extends Backbone.View
   updateSlide: (markdown) ->
     @currentSlide().html marked markdown
 
+# ---
 
-# The slides browser.
+# The slides browser
 class SlidesBrowser extends Backbone.View
+  # Slide entry template
+  template: _.template """
+    <li class="icon-star">
+      <%= summary %>
+      <button class="delete icon-trash"></button>
+    </li>
+  """
+
   initialize: ->
     Factory.on 'newslide', ($slide) =>
       @addSlide $slide
 
   # Adds a slide to the list of slides
   addSlide: ($slide) ->
-    $li = @make 'li', {}, @makeSummary $slide
+    $li = $ @template summary: @makeSummary($slide)
     @$el.append $li
 
   # Grabs some text from a slide so @addSlide can show
@@ -73,6 +83,7 @@ class SlidesBrowser extends Backbone.View
   makeSummary: ($slide) ->
     $slide.find('*:first-child').text()
 
+# ---
 
 # Boot it up
 $ ->

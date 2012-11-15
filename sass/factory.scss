@@ -32,7 +32,7 @@ body.editing {
 .authoring {
   padding-top: $page-padding * 4;
 
-  &>section {
+  &>section, &>ul {
     display: none;
     padding: $page-padding * 2;
 
@@ -65,7 +65,20 @@ body.editing {
   }
 
   .slides {
-    margin: 0
+    margin: 0;
+    min-height: 20%;
+    list-style: none;
+
+    li {
+      font-size: 1rem;
+
+      &:before { margin-right: .25rem }
+
+      .delete {
+        float: right;
+        font-size: 1rem
+      }
+    }
   }
 }
 

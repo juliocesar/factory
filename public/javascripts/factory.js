@@ -85,6 +85,8 @@
       return SlidesBrowser.__super__.constructor.apply(this, arguments);
     }
 
+    SlidesBrowser.prototype.template = _.template("<li class=\"icon-star\">\n  <%= summary %>\n  <button class=\"delete icon-trash\"></button>\n</li>");
+
     SlidesBrowser.prototype.initialize = function() {
       var _this = this;
       return Factory.on('newslide', function($slide) {
@@ -94,7 +96,9 @@
 
     SlidesBrowser.prototype.addSlide = function($slide) {
       var $li;
-      $li = this.make('li', {}, this.makeSummary($slide));
+      $li = $(this.template({
+        summary: this.makeSummary($slide)
+      }));
       return this.$el.append($li);
     };
 
