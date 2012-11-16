@@ -1202,7 +1202,7 @@ body.theme-default .authoring menu button {
   color: rgba(114, 116, 118, 0.6);
 }
 /* line 22, ../../sass/themes.scss */
-body.theme-default .authoring menu button:hover {
+body.theme-default .authoring menu button:hover, body.theme-default .authoring menu button.section-visible {
   color: #727476;
 }
 /* line 27, ../../sass/themes.scss */

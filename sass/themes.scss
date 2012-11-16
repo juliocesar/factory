@@ -19,7 +19,7 @@ body.theme-default {
       @include transition(color, 0.25s, linear);
       color: rgba($text-color, .6);
 
-      &:hover {
+      &:hover, &.section-visible {
         color: $text-color;
       }
     }

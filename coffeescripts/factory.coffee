@@ -70,13 +70,20 @@ class SlidesBrowser extends Backbone.View
   """
 
   initialize: ->
-    Factory.on 'newslide', ($slide) =>
-      @addSlide $slide
+    Factory.on 'newslide', ($slide) => @addSlide $slide
+    Factory.on 'toggleslides', (showOrHide) =>
+      @toggleVisible showOrHide
 
   # Adds a slide to the list of slides
   addSlide: ($slide) ->
     $li = $ @template summary: @makeSummary($slide)
     @$el.append $li
+
+  toggleVisible: (showOrHide) ->
+    if showOrHide is 'show'
+      @$el.fadeIn 250
+    else
+      @$el.fadeOut 100
 
   # Grabs some text from a slide so @addSlide can show
   # a preview
@@ -85,11 +92,28 @@ class SlidesBrowser extends Backbone.View
 
 # ---
 
+# The app's main menu
+class MainMenu extends Backbone.View
+  events:
+    'click .show-slides' : 'toggleSlides'
+
+  toggleSlides: ->
+    $button = $ event.target
+    if $button.hasClass 'section-visible'
+      $button.toggleClass 'section-visible', no
+      Factory.trigger 'toggleslides', 'hide'
+    else
+      $button.toggleClass 'section-visible', yes
+      Factory.trigger 'toggleslides', 'show'
+
+# ---
+
 # Boot it up
 $ ->
   Factory.Editor        = new Editor el: $('.writing textarea')
   Factory.SlideViewer   = new SlideViewer el: $('.slide-container')
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
+  Factory.MainMenu      = new MainMenu el: $('.authoring menu')
 
   Factory.trigger 'editor:updated', $('.writing textarea').val()
   Factory.SlidesBrowser.addSlide $('.slide')
