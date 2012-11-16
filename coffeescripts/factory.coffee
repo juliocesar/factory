@@ -79,10 +79,12 @@ class SlidesBrowser extends Backbone.View
     $li = $ @template summary: @makeSummary($slide)
     @$el.append $li
 
+  # Shows or hides the slides list. Pass 'show' to show,
+  # or 'hide' to hide
   toggleVisible: (showOrHide) ->
     if showOrHide is 'show'
       @$el.fadeIn 250
-    else
+    else if 'hide'
       @$el.fadeOut 100
 
   # Grabs some text from a slide so @addSlide can show
@@ -97,6 +99,8 @@ class MainMenu extends Backbone.View
   events:
     'click .show-slides' : 'toggleSlides'
 
+  # Controls whether the show/hide slides button has/hasn't
+  # a "section-visible" class, and gets Factory to fire toggleslides
   toggleSlides: ->
     $button = $ event.target
     if $button.hasClass 'section-visible'

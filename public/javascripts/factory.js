@@ -108,7 +108,7 @@
     SlidesBrowser.prototype.toggleVisible = function(showOrHide) {
       if (showOrHide === 'show') {
         return this.$el.fadeIn(250);
-      } else {
+      } else if ('hide') {
         return this.$el.fadeOut(100);
       }
     };
