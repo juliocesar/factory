@@ -1217,7 +1217,17 @@ body.theme-default .authoring .slides .delete {
 }
 /* line 37, ../../sass/themes.scss */
 body.theme-default .authoring textarea {
+  -webkit-transition: background 0.25s linear;
+  -moz-transition: background 0.25s linear;
+  -ms-transition: background 0.25s linear;
+  transition: background 0.25s linear;
+  border: 0;
+  background: transparent;
   color: #656769;
+}
+/* line 43, ../../sass/themes.scss */
+body.theme-default .authoring textarea:focus {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 /* line 4, ../../sass/type.scss */
@@ -1298,7 +1308,7 @@ body.editing .slide-container {
 .authoring menu {
   position: absolute;
   top: 0.6rem;
-  left: 0.6rem;
+  left: 1.2rem;
 }
 /* line 50, ../../sass/factory.scss */
 .authoring menu button {
@@ -1313,34 +1323,36 @@ body.editing .slide-container {
 .authoring .writing form, .authoring .writing form textarea {
   height: 100%;
   width: 100%;
-  border: 0;
-  background: transparent;
 }
-/* line 67, ../../sass/factory.scss */
+/* line 64, ../../sass/factory.scss */
+.authoring .writing textarea {
+  padding: 0.6rem;
+}
+/* line 69, ../../sass/factory.scss */
 .authoring .slides {
   margin: 0;
   min-height: 20%;
   list-style: none;
 }
-/* line 72, ../../sass/factory.scss */
+/* line 74, ../../sass/factory.scss */
 .authoring .slides li {
   font-size: 1rem;
 }
-/* line 75, ../../sass/factory.scss */
+/* line 77, ../../sass/factory.scss */
 .authoring .slides li:before {
   margin-right: .25rem;
 }
-/* line 77, ../../sass/factory.scss */
+/* line 79, ../../sass/factory.scss */
 .authoring .slides li .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 89, ../../sass/factory.scss */
+/* line 91, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 92, ../../sass/factory.scss */
+/* line 94, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);

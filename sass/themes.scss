@@ -35,7 +35,14 @@ body.theme-default {
     }
 
     textarea {
+      @include transition(background, 0.25s, linear);
+      border: 0;
+      background: transparent;
       color: darken($text-color, 5%);
+
+      &:focus {
+        background: rgba(black, .05);
+      }
     }
   }
 }

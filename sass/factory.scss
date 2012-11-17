@@ -45,7 +45,7 @@ body.editing {
   menu {
     position: absolute;
     top: $page-padding;
-    left: $page-padding;
+    left: $page-padding*2;
 
     button {
       border: 0;
@@ -59,8 +59,10 @@ body.editing {
     form, form textarea {
       height: 100%;
       width: 100%;
-      border: 0;
-      background: transparent;
+    }
+
+    textarea {
+      padding: $page-padding;
     }
   }
 
