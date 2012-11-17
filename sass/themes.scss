@@ -5,14 +5,14 @@
 
 // Factory
 body.theme-default {
-  $background-color: #dee0e1;
-  $text-color: #727476;
+  $background-color: #e9ebe6;
+  $text-color: #333;
 
-  background-color: #dee0e1;
+  background-color: $background-color;
   color: $text-color;
 
   .authoring {
-    @include box-shadow(inset -.1rem 0 .5rem lighten($text-color, 30%));
+    @include box-shadow(inset -.1rem 0 .5rem lighten($text-color, 50%));
     background-color: darken($background-color, 5%);
 
     menu button {

@@ -1183,15 +1183,15 @@ menu {
 
 /* line 7, ../../sass/themes.scss */
 body.theme-default {
-  background-color: #dee0e1;
-  color: #727476;
+  background-color: #e9ebe6;
+  color: #333333;
 }
 /* line 14, ../../sass/themes.scss */
 body.theme-default .authoring {
-  -webkit-box-shadow: inset -0.1rem 0 0.5rem #bfc1c2;
-  -moz-box-shadow: inset -0.1rem 0 0.5rem #bfc1c2;
-  box-shadow: inset -0.1rem 0 0.5rem #bfc1c2;
-  background-color: #d1d3d5;
+  -webkit-box-shadow: inset -0.1rem 0 0.5rem #b3b3b3;
+  -moz-box-shadow: inset -0.1rem 0 0.5rem #b3b3b3;
+  box-shadow: inset -0.1rem 0 0.5rem #b3b3b3;
+  background-color: #dde0d8;
 }
 /* line 18, ../../sass/themes.scss */
 body.theme-default .authoring menu button {
@@ -1199,20 +1199,20 @@ body.theme-default .authoring menu button {
   -moz-transition: color 0.25s linear;
   -ms-transition: color 0.25s linear;
   transition: color 0.25s linear;
-  color: rgba(114, 116, 118, 0.6);
+  color: rgba(51, 51, 51, 0.6);
 }
 /* line 22, ../../sass/themes.scss */
 body.theme-default .authoring menu button:hover, body.theme-default .authoring menu button.section-visible {
-  color: #727476;
+  color: #333333;
 }
 /* line 27, ../../sass/themes.scss */
 body.theme-default .authoring .slides {
-  border-bottom: 1px dashed #727476;
+  border-bottom: 1px dashed #333333;
 }
 /* line 30, ../../sass/themes.scss */
 body.theme-default .authoring .slides .delete {
   background-color: transparent;
-  color: #727476;
+  color: #333333;
   border: 0;
 }
 /* line 37, ../../sass/themes.scss */
@@ -1223,7 +1223,7 @@ body.theme-default .authoring textarea {
   transition: background 0.25s linear;
   border: 0;
   background: transparent;
-  color: #656769;
+  color: #262626;
 }
 /* line 43, ../../sass/themes.scss */
 body.theme-default .authoring textarea:focus {
