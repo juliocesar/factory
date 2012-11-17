@@ -19,6 +19,10 @@
     }
 
     Editor.prototype.initialize = function() {
+      var _this = this;
+      Factory.on('slide:request', function() {
+        return _this.loadFixture();
+      });
       this.loadFixture();
       return this.trackTextAreaChanges();
     };
@@ -48,20 +52,23 @@
 
     SlideViewer.prototype.initialize = function() {
       var _this = this;
-      this.newSlide();
+      Factory.on('slide:request', function() {
+        return _this.createNewSlide();
+      });
       return Factory.on('editor:updated', function(markdown) {
         return _this.updateSlide(markdown);
       });
     };
 
-    SlideViewer.prototype.newSlide = function() {
+    SlideViewer.prototype.createNewSlide = function() {
       var $slide;
       this.$el.empty();
       this._currentSlide = $slide = $(this.make('div', {
         "class": 'slide'
       }));
       this.$el.append($slide);
-      return Factory.trigger('newslide', $slide);
+      this.updateSlide(DEFAULT_SLIDE);
+      return Factory.trigger('slide:new', $slide);
     };
 
     SlideViewer.prototype.currentSlide = function() {
@@ -89,10 +96,10 @@
 
     SlidesBrowser.prototype.initialize = function() {
       var _this = this;
-      Factory.on('newslide', function($slide) {
+      Factory.on('slide:new', function($slide) {
         return _this.addSlide($slide);
       });
-      return Factory.on('toggleslides', function(showOrHide) {
+      return Factory.on('slides:toggle', function(showOrHide) {
         return _this.toggleVisible(showOrHide);
       });
     };
@@ -130,7 +137,8 @@
     }
 
     MainMenu.prototype.events = {
-      'click .show-slides': 'toggleSlides'
+      'click .show-slides': 'toggleSlides',
+      'click .new-slide': 'requestNewSlide'
     };
 
     MainMenu.prototype.toggleSlides = function() {
@@ -138,11 +146,15 @@
       $button = $(event.target);
       if ($button.hasClass('section-visible')) {
         $button.toggleClass('section-visible', false);
-        return Factory.trigger('toggleslides', 'hide');
+        return Factory.trigger('slides:toggle', 'hide');
       } else {
         $button.toggleClass('section-visible', true);
-        return Factory.trigger('toggleslides', 'show');
+        return Factory.trigger('slides:toggle', 'show');
       }
+    };
+
+    MainMenu.prototype.requestNewSlide = function() {
+      return Factory.trigger('slide:request');
     };
 
     return MainMenu;
@@ -162,8 +174,7 @@
     Factory.MainMenu = new MainMenu({
       el: $('.authoring menu')
     });
-    Factory.trigger('editor:updated', $('.writing textarea').val());
-    return Factory.SlidesBrowser.addSlide($('.slide'));
+    return Factory.SlideViewer.createNewSlide();
   });
 
 }).call(this);

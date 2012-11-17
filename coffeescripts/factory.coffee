@@ -20,6 +20,7 @@ DEFAULT_SLIDE = """
 # The slide text editor
 class Editor extends Backbone.View
   initialize: ->
+    Factory.on 'slide:request', => @loadFixture()
     @loadFixture()
     @trackTextAreaChanges()
 
@@ -37,16 +38,17 @@ class Editor extends Backbone.View
 # The right-hand part where the current slide gets shown.
 class SlideViewer extends Backbone.View
   initialize: ->
-    @newSlide()
+    Factory.on 'slide:request', => @createNewSlide()
     Factory.on 'editor:updated', (markdown) =>
       @updateSlide markdown
 
   # Creates a new slide
-  newSlide: ->
+  createNewSlide: ->
     @$el.empty()
     @_currentSlide = $slide = $ @make 'div', class: 'slide'
     @$el.append $slide
-    Factory.trigger 'newslide', $slide
+    @updateSlide DEFAULT_SLIDE
+    Factory.trigger 'slide:new', $slide
 
   # Memoizes and returns the current slide's element
   currentSlide: ->
@@ -70,8 +72,8 @@ class SlidesBrowser extends Backbone.View
   """
 
   initialize: ->
-    Factory.on 'newslide', ($slide) => @addSlide $slide
-    Factory.on 'toggleslides', (showOrHide) =>
+    Factory.on 'slide:new', ($slide) => @addSlide $slide
+    Factory.on 'slides:toggle', (showOrHide) =>
       @toggleVisible showOrHide
 
   # Adds a slide to the list of slides
@@ -98,17 +100,21 @@ class SlidesBrowser extends Backbone.View
 class MainMenu extends Backbone.View
   events:
     'click .show-slides' : 'toggleSlides'
+    'click .new-slide'   : 'requestNewSlide'
 
   # Controls whether the show/hide slides button has/hasn't
-  # a "section-visible" class, and gets Factory to fire toggleslides
+  # a "section-visible" class, and gets Factory to fire slides:toggle
   toggleSlides: ->
     $button = $ event.target
     if $button.hasClass 'section-visible'
       $button.toggleClass 'section-visible', no
-      Factory.trigger 'toggleslides', 'hide'
+      Factory.trigger 'slides:toggle', 'hide'
     else
       $button.toggleClass 'section-visible', yes
-      Factory.trigger 'toggleslides', 'show'
+      Factory.trigger 'slides:toggle', 'show'
+
+  requestNewSlide: ->
+    Factory.trigger 'slide:request'
 
 # ---
 
@@ -119,5 +125,4 @@ $ ->
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
 
-  Factory.trigger 'editor:updated', $('.writing textarea').val()
-  Factory.SlidesBrowser.addSlide $('.slide')
+  Factory.SlideViewer.createNewSlide()
