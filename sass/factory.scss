@@ -30,17 +30,16 @@ body.editing {
 // Authoring
 
 .authoring {
-  padding-top: $page-padding * 4;
+  padding-top: $page-padding*4;
 
-  &>section, &>ul {
+  .writing, .slides {
     display: none;
-    padding: $page-padding * 2;
 
-    &.visible {
-      display: block
-    }
+    &.visible { display: block }
   }
 
+  .slides { padding: $page-padding*3 }
+  .writing { padding: $page-padding*2 }
 
   menu {
     position: absolute;

@@ -1296,63 +1296,70 @@ body.editing .slide-container {
   padding-top: 2.4rem;
 }
 /* line 35, ../../sass/factory.scss */
-.authoring > section, .authoring > ul {
+.authoring .writing, .authoring .slides {
   display: none;
-  padding: 1.2rem;
 }
-/* line 39, ../../sass/factory.scss */
-.authoring > section.visible, .authoring > ul.visible {
+/* line 38, ../../sass/factory.scss */
+.authoring .writing.visible, .authoring .slides.visible {
   display: block;
 }
-/* line 45, ../../sass/factory.scss */
+/* line 41, ../../sass/factory.scss */
+.authoring .slides {
+  padding: 1.8rem;
+}
+/* line 42, ../../sass/factory.scss */
+.authoring .writing {
+  padding: 1.2rem;
+}
+/* line 44, ../../sass/factory.scss */
 .authoring menu {
   position: absolute;
   top: 0.6rem;
   left: 1.2rem;
 }
-/* line 50, ../../sass/factory.scss */
+/* line 49, ../../sass/factory.scss */
 .authoring menu button {
   border: 0;
   background: transparent;
 }
-/* line 56, ../../sass/factory.scss */
+/* line 55, ../../sass/factory.scss */
 .authoring .writing {
   height: 100%;
 }
-/* line 59, ../../sass/factory.scss */
+/* line 58, ../../sass/factory.scss */
 .authoring .writing form, .authoring .writing form textarea {
   height: 100%;
   width: 100%;
 }
-/* line 64, ../../sass/factory.scss */
+/* line 63, ../../sass/factory.scss */
 .authoring .writing textarea {
   padding: 0.6rem;
 }
-/* line 69, ../../sass/factory.scss */
+/* line 68, ../../sass/factory.scss */
 .authoring .slides {
   margin: 0;
   min-height: 20%;
   list-style: none;
 }
-/* line 74, ../../sass/factory.scss */
+/* line 73, ../../sass/factory.scss */
 .authoring .slides li {
   font-size: 1rem;
 }
-/* line 77, ../../sass/factory.scss */
+/* line 76, ../../sass/factory.scss */
 .authoring .slides li:before {
   margin-right: .25rem;
 }
-/* line 79, ../../sass/factory.scss */
+/* line 78, ../../sass/factory.scss */
 .authoring .slides li .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 91, ../../sass/factory.scss */
+/* line 90, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 94, ../../sass/factory.scss */
+/* line 93, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
