@@ -12,10 +12,9 @@
 # Keep a global reference around, as well as some app-wide methods.
 window.Factory =
   # Opens a presentation object.
-  open: (presentation) ->
-    Factory.Editor.loadFixture()
-    Factory.SlidesBrowser.empty()
-    Factory.SlideViewer.createNewSlide()
+  open: (presentation, slideNumber) ->
+    @currentPresentation = presentation
+    Factory.trigger 'slide:navigate', slideNumber
 
 # Make it the app events hub
 _.extend Factory, Backbone.Events
@@ -33,13 +32,13 @@ DEFAULT_SLIDE = """
 # The slide text editor
 class Editor extends Backbone.View
   initialize: ->
-    Factory.on 'slide:request', => @loadFixture()
-    @loadFixture()
+    Factory.on 'slide:added', (markdown) => @open markdown
+
     @trackTextAreaChanges()
 
-  # Loads the fixture from DEFAULT_SLIDE into the editor
-  loadFixture: ->
-    @$el.val DEFAULT_SLIDE
+  # Opens a slide's markdown
+  open: (markdown) ->
+    @$el.val markdown
 
   # Tracks changes made in the editor and fires editor:updated
   trackTextAreaChanges: ->
@@ -51,24 +50,24 @@ class Editor extends Backbone.View
 # The right-hand part where the current slide gets shown.
 class SlideViewer extends Backbone.View
   initialize: ->
-    Factory.on 'slide:request', => @createNewSlide()
     Factory.on 'editor:updated', (markdown) =>
       @updateSlide markdown
+    Factory.on 'slide:added', (markdown) =>
+      @createSlide markdown
 
   # Creates a new slide
-  createNewSlide: ->
+  createSlide: (markdown) ->
     @$el.empty()
     @_currentSlide = $slide = $ @make 'div', class: 'slide'
     @$el.append $slide
     @updateSlide DEFAULT_SLIDE
-    Factory.trigger 'slide:new', $slide
 
   # Memoizes and returns the current slide's element
   currentSlide: ->
     @_currentSlide ?= @$el.find '.slide'
 
   # Compiles markdown from the text editor using marked()
-  # and prints the markup to the current slide
+  # and prints the markup to the stage
   updateSlide: (markdown) ->
     @currentSlide().html marked markdown
 
@@ -85,13 +84,14 @@ class SlidesBrowser extends Backbone.View
   """
 
   initialize: ->
-    Factory.on 'slide:new', ($slide) => @addSlide $slide
+    Factory.on 'slide:added', (markdown) =>
+      @addSlide markdown
     Factory.on 'slides:toggle', (showOrHide) =>
       @toggleVisible showOrHide
 
   # Adds a slide to the list of slides
-  addSlide: ($slide) ->
-    $li = $ @template summary: @makeSummary($slide)
+  addSlide: (markdown) ->
+    $li = $ @template summary: @makeSummary(markdown)
     @$el.append $li
 
   # Shows or hides the slides list. Pass 'show' to show,
@@ -102,10 +102,11 @@ class SlidesBrowser extends Backbone.View
     else if 'hide'
       @$el.fadeOut 100
 
-  # Grabs some text from a slide so @addSlide can show
-  # a preview
-  makeSummary: ($slide) ->
-    $slide.find('*:first-child').text()
+  # Grabs some text from a slide's compiled markdown
+  # so @addSlide can show a preview
+  makeSummary: (markdown) ->
+    $placeholder = $('<div></div>').html marked markdown
+    $placeholder.find('*:first-child').text()
 
   empty: ->
     @$el.find('li').remove()
@@ -139,11 +140,25 @@ class MainMenu extends Backbone.View
 # localStorage['AABBB'] = <serialized slides>
 class Presentation extends Backbone.Model
   initialize: ->
-    @set 'id', @makeUniqueId()
+    Factory.on 'slide:request', => @addSlide DEFAULT_SLIDE
+    @set 'id', @makeUniqueId() unless @isNew()
     @localStorage = new Backbone.LocalStorage @id
+    @makeFirstSlide()
 
   makeUniqueId: ->
     Math.random().toString(36).substring(6).toUpperCase()
+
+  makeFirstSlide: ->
+    @addSlide DEFAULT_SLIDE
+
+  addSlide: (markdown) ->
+    if @has 'slides'
+      slides = @get 'slides'
+      slides.push markdown
+      @set 'slides', slides
+    else
+      @set 'slides', [markdown]
+    Factory.trigger 'slide:added', markdown
 
 # ---
 
@@ -160,7 +175,7 @@ class Router extends Backbone.Router
     @navigate '/new', true
 
   new: ->
-    Factory.open new Presentation
+    Factory.open new Presentation, 0
 
 # ---
 

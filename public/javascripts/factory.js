@@ -5,10 +5,9 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   window.Factory = {
-    open: function(presentation) {
-      Factory.Editor.loadFixture();
-      Factory.SlidesBrowser.empty();
-      return Factory.SlideViewer.createNewSlide();
+    open: function(presentation, slideNumber) {
+      this.currentPresentation = presentation;
+      return Factory.trigger('slide:navigate', slideNumber);
     }
   };
 
@@ -26,15 +25,14 @@
 
     Editor.prototype.initialize = function() {
       var _this = this;
-      Factory.on('slide:request', function() {
-        return _this.loadFixture();
+      Factory.on('slide:added', function(markdown) {
+        return _this.open(markdown);
       });
-      this.loadFixture();
       return this.trackTextAreaChanges();
     };
 
-    Editor.prototype.loadFixture = function() {
-      return this.$el.val(DEFAULT_SLIDE);
+    Editor.prototype.open = function(markdown) {
+      return this.$el.val(markdown);
     };
 
     Editor.prototype.trackTextAreaChanges = function() {
@@ -58,23 +56,22 @@
 
     SlideViewer.prototype.initialize = function() {
       var _this = this;
-      Factory.on('slide:request', function() {
-        return _this.createNewSlide();
-      });
-      return Factory.on('editor:updated', function(markdown) {
+      Factory.on('editor:updated', function(markdown) {
         return _this.updateSlide(markdown);
+      });
+      return Factory.on('slide:added', function(markdown) {
+        return _this.createSlide(markdown);
       });
     };
 
-    SlideViewer.prototype.createNewSlide = function() {
+    SlideViewer.prototype.createSlide = function(markdown) {
       var $slide;
       this.$el.empty();
       this._currentSlide = $slide = $(this.make('div', {
         "class": 'slide'
       }));
       this.$el.append($slide);
-      this.updateSlide(DEFAULT_SLIDE);
-      return Factory.trigger('slide:new', $slide);
+      return this.updateSlide(DEFAULT_SLIDE);
     };
 
     SlideViewer.prototype.currentSlide = function() {
@@ -102,18 +99,18 @@
 
     SlidesBrowser.prototype.initialize = function() {
       var _this = this;
-      Factory.on('slide:new', function($slide) {
-        return _this.addSlide($slide);
+      Factory.on('slide:added', function(markdown) {
+        return _this.addSlide(markdown);
       });
       return Factory.on('slides:toggle', function(showOrHide) {
         return _this.toggleVisible(showOrHide);
       });
     };
 
-    SlidesBrowser.prototype.addSlide = function($slide) {
+    SlidesBrowser.prototype.addSlide = function(markdown) {
       var $li;
       $li = $(this.template({
-        summary: this.makeSummary($slide)
+        summary: this.makeSummary(markdown)
       }));
       return this.$el.append($li);
     };
@@ -126,8 +123,10 @@
       }
     };
 
-    SlidesBrowser.prototype.makeSummary = function($slide) {
-      return $slide.find('*:first-child').text();
+    SlidesBrowser.prototype.makeSummary = function(markdown) {
+      var $placeholder;
+      $placeholder = $('<div></div>').html(marked(markdown));
+      return $placeholder.find('*:first-child').text();
     };
 
     SlidesBrowser.prototype.empty = function() {
@@ -180,12 +179,35 @@
     }
 
     Presentation.prototype.initialize = function() {
-      this.set('id', this.makeUniqueId());
-      return this.localStorage = new Backbone.LocalStorage(this.id);
+      var _this = this;
+      Factory.on('slide:request', function() {
+        return _this.addSlide(DEFAULT_SLIDE);
+      });
+      if (!this.isNew()) {
+        this.set('id', this.makeUniqueId());
+      }
+      this.localStorage = new Backbone.LocalStorage(this.id);
+      return this.makeFirstSlide();
     };
 
     Presentation.prototype.makeUniqueId = function() {
       return Math.random().toString(36).substring(6).toUpperCase();
+    };
+
+    Presentation.prototype.makeFirstSlide = function() {
+      return this.addSlide(DEFAULT_SLIDE);
+    };
+
+    Presentation.prototype.addSlide = function(markdown) {
+      var slides;
+      if (this.has('slides')) {
+        slides = this.get('slides');
+        slides.push(markdown);
+        this.set('slides', slides);
+      } else {
+        this.set('slides', [markdown]);
+      }
+      return Factory.trigger('slide:added', markdown);
     };
 
     return Presentation;
@@ -212,7 +234,7 @@
     };
 
     Router.prototype["new"] = function() {
-      return Factory.open(new Presentation);
+      return Factory.open(new Presentation, 0);
     };
 
     return Router;
