@@ -5,12 +5,18 @@
 #
 # * Each Backbone view is a component that binds to a DOM element
 #   that already exists by the time the app is instantiated.
-# * Components talk to each other by sending events with data to
-#   the global `Factory` object, and by listening to events on it,
-#   so views never talk to each other directly.
+# * Components talk to each other by triggering events and passing
+#   data to the global `Factory` object, and by listening to events
+#   on it, so views never talk to each other directly.
 
-# Keep a global reference around
-window.Factory = {}
+# Keep a global reference around, as well as some app-wide methods.
+window.Factory =
+  # Opens a presentation object.
+  open: (presentation) ->
+    alert 'ff'
+    Factory.Editor.loadFixture()
+    Factory.SlidesBrowser.empty()
+    Factory.SlideViewer.createNewSlide()
 
 # Make it the app events hub
 _.extend Factory, Backbone.Events
@@ -102,6 +108,9 @@ class SlidesBrowser extends Backbone.View
   makeSummary: ($slide) ->
     $slide.find('*:first-child').text()
 
+  empty: ->
+    @$el.find('li').remove()
+
 # ---
 
 # The app's main menu
@@ -126,6 +135,36 @@ class MainMenu extends Backbone.View
 
 # ---
 
+# We'll use localStorage to keep presentations like this:
+# localStorage['XXXXX'] = <serialized slides>
+# localStorage['AABBB'] = <serialized slides>
+class Presentation extends Backbone.Model
+  initialize: ->
+    @set 'id', @makeUniqueId()
+    @localStorage = new Backbone.LocalStorage @id
+
+  makeUniqueId: ->
+    Math.random().toString(36).substring(6).toUpperCase()
+
+# ---
+
+# Sadly, this since is a self-contained client-side app, we'll
+# need Backbone.Router
+class Router extends Backbone.Router
+  routes:
+    ''           : 'home'
+    'new'        : 'new'
+    ':id'        : 'open'
+    ':id/:slide' : 'openSlide'
+
+  home: ->
+    @navigate '/new', true
+
+  new: ->
+    Factory.open new Presentation
+
+# ---
+
 # Boot it up
 $ ->
   Factory.Editor        = new Editor el: $('.writing textarea')
@@ -133,4 +172,7 @@ $ ->
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
 
-  Factory.SlideViewer.createNewSlide()
+  # Instance a router in the void, since we won't be needing it further.
+  new Router
+
+  Backbone.history.start pushState: true

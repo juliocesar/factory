@@ -1,36 +1,3 @@
-# A config.ru useful for serving static sites from the "Bamboo" heroku stack.
-#
-# Interface:
-#
-#   Url Path | Action
-#   -------- | -------------------------------------------------------------
-#   /        | contents of: index.html OR
-#            | contents of: 404.html OR
-#            | default 404 message
-#            |
-#   /foo     | contents of: foo.html OR
-#            | contents of: 404.html OR
-#            | default 404 message
-#            |
-#   /foo/    | contents of: foo/index.html OR
-#            | redirect to: /foo
-#            |
-#   /$X      | contents of: $X OR
-#            | contents of: $X.html OR
-#            | contents of: 404.html OR
-#            | default 404 message
-#
-# All responses have a 15min cache time set. This means the site will _not_
-# update "instantly" for viewers with a stale cache in their browser. Even
-# though heroku flushes the varnish cache after each deploy. Coment out
-# first line of `cache` function to turn this off.
-#
-# Note all files in the same dir as `config.ru` (including `config.ru` itself)
-# can be served. Nothing is blocked. If a file shouldn't be public then it
-# shouldn't be in this dir.
-#
-# To test this config locally run `rackup --port 8080`
-
 require 'rack'
 
 module StaticApp ; extend self
@@ -54,8 +21,20 @@ module StaticApp ; extend self
     resp = FileServer.call(rewrite_path(env, '.html'))
     return cache(resp) unless not_found?(resp)
 
+    # If PATH_INFO is not a file name with an extension, it's probably
+    # a path we got taken to by the JS app, so just serve index.html
+    if File.extname(env['PATH_INFO']) == ''
+      resp = FileServer.call(rewrite_to_index(env))
+      return cache(resp) unless not_found?(resp)
+    end
+
     # Serve not found
     not_found
+  end
+
+  def rewrite_to_index(env)
+    env['PATH_INFO'] = '/index.html'
+    env
   end
 
   def rewrite_path(env, newpath)
@@ -63,6 +42,7 @@ module StaticApp ; extend self
   end
 
   def cache(resp)
+    return resp # disable caching
     resp[1]['Cache-Control'] = "public, max-age=#{15 * 60}" # 15min
     resp
   end
