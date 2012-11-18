@@ -6,7 +6,6 @@
 
   window.Factory = {
     open: function(presentation) {
-      alert('ff');
       Factory.Editor.loadFixture();
       Factory.SlidesBrowser.empty();
       return Factory.SlideViewer.createNewSlide();

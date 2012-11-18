@@ -13,7 +13,6 @@
 window.Factory =
   # Opens a presentation object.
   open: (presentation) ->
-    alert 'ff'
     Factory.Editor.loadFixture()
     Factory.SlidesBrowser.empty()
     Factory.SlideViewer.createNewSlide()
@@ -172,7 +171,7 @@ $ ->
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
 
-  # Instance a router in the void, since we won't be needing it further.
+  # Instance a router in the void. We won't be needing it further.
   new Router
 
   Backbone.history.start pushState: true
