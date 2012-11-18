@@ -1,5 +1,13 @@
 # Factory - Interactions
 # ======================
+#
+# The gist:
+#
+# * Each Backbone view is a component that binds to a DOM element
+#   that already exists by the time the app is instantiated.
+# * Components talk to each other by sending events with data to
+#   the global `Factory` object, and by listening to events on it,
+#   so views never talk to each other directly.
 
 # Keep a global reference around
 window.Factory = {}
