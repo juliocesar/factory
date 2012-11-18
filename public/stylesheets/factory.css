@@ -1343,23 +1343,24 @@ body.editing .slide-container {
 }
 /* line 73, ../../sass/factory.scss */
 .authoring .slides li {
+  margin-top: .5rem;
   font-size: 1rem;
 }
-/* line 76, ../../sass/factory.scss */
+/* line 77, ../../sass/factory.scss */
 .authoring .slides li:before {
   margin-right: .25rem;
 }
-/* line 78, ../../sass/factory.scss */
+/* line 79, ../../sass/factory.scss */
 .authoring .slides li .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 90, ../../sass/factory.scss */
+/* line 91, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 93, ../../sass/factory.scss */
+/* line 94, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
