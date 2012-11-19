@@ -15,7 +15,8 @@
       this.currentSlide = slideNumber;
       markdown = this.currentPresentation.get('slides')[slideNumber];
       Factory.Editor.open(markdown);
-      return Factory.SlideViewer.updateSlide(markdown);
+      Factory.SlideViewer.createSlide(markdown);
+      return Factory.SlidesBrowser.loadSlides(this.currentPresentation.get('slides'));
     }
   };
 
@@ -68,18 +69,18 @@
         return _this.updateSlide(markdown);
       });
       return Factory.on('slide:added', function(markdown) {
-        return _this.renderSlide(markdown);
+        return _this.createSlide(markdown);
       });
     };
 
-    SlideViewer.prototype.renderSlide = function(markdown) {
+    SlideViewer.prototype.createSlide = function(markdown) {
       var $slide;
       this.$el.empty();
       this._currentSlide = $slide = $(this.make('div', {
         "class": 'slide'
       }));
       this.$el.append($slide);
-      return this.updateSlide(DEFAULT_SLIDE);
+      return this.updateSlide(markdown);
     };
 
     SlideViewer.prototype.currentSlide = function() {
@@ -104,10 +105,10 @@
     }
 
     SlidesBrowser.prototype.events = {
-      'click li': 'open'
+      'click a': 'open'
     };
 
-    SlidesBrowser.prototype.template = _.template("<li class=\"icon-star\">\n  <%= summary %>\n  <button class=\"delete icon-trash\"></button>\n</li>");
+    SlidesBrowser.prototype.template = _.template("<a href=\"<%= url %>\" class=\"icon-star\">\n  <%= summary %>\n  <button class=\"delete icon-trash\"></button>\n</a>");
 
     SlidesBrowser.prototype.initialize = function() {
       var _this = this;
@@ -126,11 +127,23 @@
     };
 
     SlidesBrowser.prototype.addSlide = function(markdown) {
-      var $li;
-      $li = $(this.template({
-        summary: this.makeSummary(markdown)
+      var $a, index;
+      index = this.$el.find('a').length;
+      $a = $(this.template({
+        summary: this.makeSummary(markdown),
+        url: Factory.currentPresentation.url(index)
       }));
-      return this.$el.append($li);
+      return this.$el.append($a);
+    };
+
+    SlidesBrowser.prototype.loadSlides = function(slides) {
+      var slide, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = slides.length; _i < _len; _i++) {
+        slide = slides[_i];
+        _results.push(this.addSlide(slide));
+      }
+      return _results;
     };
 
     SlidesBrowser.prototype.toggleVisible = function(showOrHide) {
@@ -196,25 +209,32 @@
       return Presentation.__super__.constructor.apply(this, arguments);
     }
 
+    Presentation.find = function(id) {
+      var presentation;
+      if (localStorage[id] != null) {
+        presentation = new Presentation({
+          id: id
+        });
+        presentation.fetch();
+        return presentation;
+      }
+    };
+
     Presentation.prototype.initialize = function() {
       var _this = this;
       Factory.on('slide:request', function() {
         return _this.addSlide(DEFAULT_SLIDE);
       });
-      if (!this.has('id')) {
+      if (this.isNew()) {
         this.set({
           'id': this.makeUniqueId()
         });
+        return this.addSlide(DEFAULT_SLIDE);
       }
-      return this.makeFirstSlide();
     };
 
     Presentation.prototype.makeUniqueId = function() {
       return Math.random().toString(36).substring(6).toUpperCase();
-    };
-
-    Presentation.prototype.makeFirstSlide = function() {
-      return this.addSlide(DEFAULT_SLIDE);
     };
 
     Presentation.prototype.addSlide = function(markdown) {
@@ -229,6 +249,15 @@
         this.set('slides', [markdown]);
       }
       return Factory.trigger('slide:added', markdown);
+    };
+
+    Presentation.prototype.url = function(slideNumber) {
+      var url;
+      url = "/" + this.id;
+      if (slideNumber != null) {
+        url += "/" + slideNumber;
+      }
+      return url;
     };
 
     Presentation.prototype.sync = function() {
@@ -281,11 +310,9 @@
       if (slideIndex == null) {
         slideIndex = 0;
       }
-      presentation = new Presentation({
-        id: presentationId
-      });
-      presentation.fetch();
-      return Factory.open(presentation, slideIndex);
+      if (presentation = Presentation.find(presentationId)) {
+        return Factory.open(presentation, slideIndex);
+      }
     };
 
     Router.prototype["new"] = function() {
@@ -309,7 +336,7 @@
     Factory.MainMenu = new MainMenu({
       el: $('.authoring menu')
     });
-    new Router;
+    Factory.Router = new Router;
     return Backbone.history.start({
       pushState: true
     });

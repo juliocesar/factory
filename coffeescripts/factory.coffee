@@ -17,7 +17,8 @@ window.Factory =
     @currentSlide = slideNumber
     markdown = @currentPresentation.get('slides')[slideNumber]
     Factory.Editor.open markdown
-    Factory.SlideViewer.updateSlide markdown
+    Factory.SlideViewer.createSlide markdown
+    Factory.SlidesBrowser.loadSlides @currentPresentation.get('slides')
 
 # Make it the app events hub
 _.extend Factory, Backbone.Events
@@ -55,14 +56,14 @@ class SlideViewer extends Backbone.View
     Factory.on 'editor:updated', (markdown) =>
       @updateSlide markdown
     Factory.on 'slide:added', (markdown) =>
-      @renderSlide markdown
+      @createSlide markdown
 
   # Creates a new slide
-  renderSlide: (markdown) ->
+  createSlide: (markdown) ->
     @$el.empty()
     @_currentSlide = $slide = $ @make 'div', class: 'slide'
     @$el.append $slide
-    @updateSlide DEFAULT_SLIDE
+    @updateSlide markdown
 
   # Memoizes and returns the current slide's element
   currentSlide: ->
@@ -78,14 +79,14 @@ class SlideViewer extends Backbone.View
 # The slides browser
 class SlidesBrowser extends Backbone.View
   events:
-    'click li': 'open'
+    'click a': 'open'
 
   # Slide entry template
   template: _.template """
-    <li class="icon-star">
+    <a href="<%= url %>" class="icon-star">
       <%= summary %>
       <button class="delete icon-trash"></button>
-    </li>
+    </a>
   """
 
   initialize: ->
@@ -101,8 +102,16 @@ class SlidesBrowser extends Backbone.View
 
   # Adds a slide to the list of slides
   addSlide: (markdown) ->
-    $li = $ @template summary: @makeSummary(markdown)
-    @$el.append $li
+    index = @$el.find('a').length
+    $a = $ @template
+      summary: @makeSummary markdown
+      url: Factory.currentPresentation.url index
+    @$el.append $a
+
+  # Loads an array of slides into the list, clearing the
+  # existing ones.
+  loadSlides: (slides) ->
+    @addSlide slide for slide in slides
 
   # Shows or hides the slides list. Pass 'show' to show,
   # or 'hide' to hide
@@ -148,17 +157,25 @@ class MainMenu extends Backbone.View
 # The presentation model. We won't need a collection for these
 # as we'll be using localStorage for that.
 class Presentation extends Backbone.Model
+
+  # Class method to grab a presentation from localStorage
+  @find: (id) ->
+    if localStorage[id]?
+      presentation = new Presentation id: id
+      presentation.fetch()
+      presentation
+
   initialize: ->
     Factory.on 'slide:request', => @addSlide DEFAULT_SLIDE
-    @set 'id': @makeUniqueId() unless @has 'id'
-    @makeFirstSlide()
+    if @isNew()
+      @set 'id': @makeUniqueId()
+      @addSlide DEFAULT_SLIDE
 
+  # Makes something less long than a UUID
   makeUniqueId: ->
     Math.random().toString(36).substring(6).toUpperCase()
 
-  makeFirstSlide: ->
-    @addSlide DEFAULT_SLIDE
-
+  # Adds a slide's markdown to the array of slides
   addSlide: (markdown) ->
     if @has 'slides'
       slides = @get 'slides'
@@ -168,7 +185,14 @@ class Presentation extends Backbone.Model
       @set 'slides', [markdown]
     Factory.trigger 'slide:added', markdown
 
-  # Uses localStorage to store models as localStorage[<model id>]
+  # Helper to construct a URL for a presentation. Passing
+  # a slide number adds a direct link to it.
+  url: (slideNumber) ->
+    url = "/#{@id}"
+    url += "/#{slideNumber}" if slideNumber?
+    url
+
+  # Use localStorage to store models as localStorage[<model id>]
   sync: (method, model, rest...) ->
     switch method
       when 'create', 'update'
@@ -196,9 +220,8 @@ class Router extends Backbone.Router
     @navigate '/new', true
 
   open: (presentationId, slideIndex = 0) ->
-    presentation = new Presentation id: presentationId
-    presentation.fetch()
-    Factory.open presentation, slideIndex
+    if presentation = Presentation.find presentationId
+      Factory.open presentation, slideIndex
 
   new: ->
     Factory.open new Presentation, 0
@@ -211,8 +234,6 @@ $ ->
   Factory.SlideViewer   = new SlideViewer el: $('.slide-container')
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
-
-  # Instance a router in the void. We won't be needing it further.
-  new Router
+  Factory.Router        = new Router
 
   Backbone.history.start pushState: true
