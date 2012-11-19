@@ -27,7 +27,7 @@ body.theme-default {
     .slides {
       border-bottom: 1px dashed $text-color;
 
-      li {
+      a {
         @include transition(background, 0.25s, linear);
 
         &:hover {
@@ -48,7 +48,7 @@ body.theme-default {
       background: transparent;
       color: darken($text-color, 5%);
 
-      &:focus {
+      &:focus, &:hover {
         background: rgba(black, .05);
       }
     }

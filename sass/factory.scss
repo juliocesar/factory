@@ -70,10 +70,12 @@ body.editing {
     min-height: 20%;
     list-style: none;
 
-    li {
+    a {
+      display: block;
       margin-top: .5rem;
       font-size: 1rem;
-
+      color: inherit;
+      text-decoration: none;
       cursor: pointer;
 
       &:before { margin-right: .25rem }

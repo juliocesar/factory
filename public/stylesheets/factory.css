@@ -1210,14 +1210,14 @@ body.theme-default .authoring .slides {
   border-bottom: 1px dashed #333333;
 }
 /* line 30, ../../sass/themes.scss */
-body.theme-default .authoring .slides li {
+body.theme-default .authoring .slides a {
   -webkit-transition: background 0.25s linear;
   -moz-transition: background 0.25s linear;
   -ms-transition: background 0.25s linear;
   transition: background 0.25s linear;
 }
 /* line 33, ../../sass/themes.scss */
-body.theme-default .authoring .slides li:hover {
+body.theme-default .authoring .slides a:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 /* line 38, ../../sass/themes.scss */
@@ -1237,7 +1237,7 @@ body.theme-default .authoring textarea {
   color: #262626;
 }
 /* line 51, ../../sass/themes.scss */
-body.theme-default .authoring textarea:focus {
+body.theme-default .authoring textarea:focus, body.theme-default .authoring textarea:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
@@ -1353,26 +1353,29 @@ body.editing .slide-container {
   list-style: none;
 }
 /* line 73, ../../sass/factory.scss */
-.authoring .slides li {
+.authoring .slides a {
+  display: block;
   margin-top: .5rem;
   font-size: 1rem;
+  color: inherit;
+  text-decoration: none;
   cursor: pointer;
 }
-/* line 79, ../../sass/factory.scss */
-.authoring .slides li:before {
+/* line 81, ../../sass/factory.scss */
+.authoring .slides a:before {
   margin-right: .25rem;
 }
-/* line 81, ../../sass/factory.scss */
-.authoring .slides li .delete {
+/* line 83, ../../sass/factory.scss */
+.authoring .slides a .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 93, ../../sass/factory.scss */
+/* line 95, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 96, ../../sass/factory.scss */
+/* line 98, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
