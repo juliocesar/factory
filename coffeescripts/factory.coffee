@@ -35,8 +35,8 @@ DEFAULT_SLIDE = """
 
 # The slide text editor
 class Editor extends Backbone.View
+
   initialize: ->
-    Factory.on 'slide:added', (markdown) => @open markdown
     @trackTextAreaChanges()
 
   # Opens a slide's markdown
@@ -52,6 +52,7 @@ class Editor extends Backbone.View
 
 # The right-hand part where the current slide gets shown.
 class SlideViewer extends Backbone.View
+
   initialize: ->
     Factory.on 'editor:updated', (markdown) =>
       @updateSlide markdown
@@ -78,6 +79,7 @@ class SlideViewer extends Backbone.View
 
 # The slides browser
 class SlidesBrowser extends Backbone.View
+
   events:
     'click a': 'open'
 
@@ -138,6 +140,7 @@ class SlidesBrowser extends Backbone.View
 
 # The app's main menu
 class MainMenu extends Backbone.View
+
   events:
     'click .show-slides' : 'toggleSlides'
     'click .new-slide'   : 'requestNewSlide'
@@ -170,7 +173,6 @@ class Presentation extends Backbone.Model
       presentation
 
   initialize: ->
-    Factory.on 'slide:request', => @addSlide DEFAULT_SLIDE
     if @isNew()
       @set 'id': @makeUniqueId()
       @addSlide DEFAULT_SLIDE
@@ -214,6 +216,7 @@ class Presentation extends Backbone.Model
 # Sadly, this since is a self-contained client-side app, we'll
 # need Backbone.Router
 class Router extends Backbone.Router
+
   routes:
     ''           : 'home'
     'new'        : 'new'
@@ -223,10 +226,13 @@ class Router extends Backbone.Router
   home: ->
     @navigate '/new', true
 
-  open: (presentationId, slideIndex = 0) ->
+  # Opens a presentation. If a slide number is provided, jump
+  # to it
+  open: (presentationId, slideNumber = 0) ->
     if presentation = Presentation.find presentationId
-      Factory.open presentation, slideIndex
+      Factory.open presentation, slideNumber
 
+  # Creates a new presentation
   new: ->
     Factory.open new Presentation, 0
 

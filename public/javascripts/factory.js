@@ -33,10 +33,6 @@
     }
 
     Editor.prototype.initialize = function() {
-      var _this = this;
-      Factory.on('slide:added', function(markdown) {
-        return _this.open(markdown);
-      });
       return this.trackTextAreaChanges();
     };
 
@@ -226,10 +222,6 @@
     };
 
     Presentation.prototype.initialize = function() {
-      var _this = this;
-      Factory.on('slide:request', function() {
-        return _this.addSlide(DEFAULT_SLIDE);
-      });
       if (this.isNew()) {
         this.set({
           'id': this.makeUniqueId()
@@ -310,13 +302,13 @@
       return this.navigate('/new', true);
     };
 
-    Router.prototype.open = function(presentationId, slideIndex) {
+    Router.prototype.open = function(presentationId, slideNumber) {
       var presentation;
-      if (slideIndex == null) {
-        slideIndex = 0;
+      if (slideNumber == null) {
+        slideNumber = 0;
       }
       if (presentation = Presentation.find(presentationId)) {
-        return Factory.open(presentation, slideIndex);
+        return Factory.open(presentation, slideNumber);
       }
     };
 
