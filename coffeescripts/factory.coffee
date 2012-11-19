@@ -146,7 +146,7 @@ class MainMenu extends Backbone.View
 
 # The presentation model. We won't need a collection for these
 # as we'll be using localStorage for that.
-class window.Presentation extends Backbone.Model
+class Presentation extends Backbone.Model
   # localStorage: new Backbone.LocalStorage 'factory'
 
   initialize: ->
@@ -170,7 +170,7 @@ class window.Presentation extends Backbone.Model
     Factory.trigger 'slide:added', markdown
 
   # Uses localStorage to store models as localStorage[<model id>]
-  sync: (method, model, options, error) ->
+  sync: (method, model, rest...) ->
     switch method
       when 'create', 'update'
         localStorage.setItem @id, JSON.stringify model
