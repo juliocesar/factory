@@ -11,12 +11,38 @@
       if (slideNumber == null) {
         slideNumber = 0;
       }
+      if (this.currentPresentation != null) {
+        this._unbindComponents(this.currentPresentation);
+      }
       this.currentPresentation = presentation;
       this.currentSlide = slideNumber;
+      this._bindComponents(this.currentPresentation);
       markdown = this.currentPresentation.get('slides')[slideNumber];
       Factory.Editor.open(markdown);
       Factory.SlideViewer.createSlide(markdown);
-      return Factory.SlidesBrowser.loadSlides(this.currentPresentation.get('slides'));
+      return this.currentPresentation.trigger('change');
+    },
+    _bindComponents: function(presentation) {
+      return presentation.on('change', function() {
+        return Factory.SlidesBrowser.loadSlides(presentation.get('slides'));
+      });
+    },
+    _unbindComponents: function(presentation) {
+      return presentation.off();
+    },
+    saveCurrentPresentation: function() {
+      var slides;
+      slides = this.currentPresentation.get('slides');
+      slides[this.currentSlide] = Factory.Editor.$el.val();
+      this.currentPresentation.set({
+        'slides': slides
+      });
+      return this.currentPresentation.trigger('change');
+    },
+    toggleAutoSave: function() {
+      return this._autoSaveInterval = setInterval(function() {
+        return Factory.saveCurrentPresentation();
+      }, 5000);
     }
   };
 
@@ -43,7 +69,7 @@
     Editor.prototype.trackTextAreaChanges = function() {
       var _this = this;
       return this.$el.on('keyup change cut paste', function() {
-        return Factory.trigger('editor:updated', _this.$el.val());
+        return Factory.SlideViewer.updateSlide(_this.$el.val());
       });
     };
 
@@ -58,16 +84,6 @@
     function SlideViewer() {
       return SlideViewer.__super__.constructor.apply(this, arguments);
     }
-
-    SlideViewer.prototype.initialize = function() {
-      var _this = this;
-      Factory.on('editor:updated', function(markdown) {
-        return _this.updateSlide(markdown);
-      });
-      return Factory.on('slide:added', function(markdown) {
-        return _this.createSlide(markdown);
-      });
-    };
 
     SlideViewer.prototype.createSlide = function(markdown) {
       var $slide;
@@ -108,9 +124,6 @@
 
     SlidesBrowser.prototype.initialize = function() {
       var _this = this;
-      Factory.on('slide:added', function(markdown) {
-        return _this.addSlide(markdown);
-      });
       return Factory.on('slides:toggle', function(showOrHide) {
         return _this.toggleVisible(showOrHide);
       });
@@ -134,6 +147,14 @@
         url: Factory.currentPresentation.url(index)
       }));
       return this.$el.append($a);
+    };
+
+    SlidesBrowser.prototype.deleteSlide = function(slideNumber) {
+      var presentation;
+      presentation = Factory.currentPresentation;
+      return presentation.set({
+        slides: presentation.attributes.splice(slideNumber, 1)
+      });
     };
 
     SlidesBrowser.prototype.loadSlides = function(slides) {
@@ -179,7 +200,7 @@
 
     MainMenu.prototype.events = {
       'click .show-slides': 'toggleSlides',
-      'click .new-slide': 'requestNewSlide'
+      'click .new-slide': 'createNewSlide'
     };
 
     MainMenu.prototype.toggleSlides = function() {
@@ -194,8 +215,10 @@
       }
     };
 
-    MainMenu.prototype.requestNewSlide = function() {
-      return Factory.trigger('slide:request');
+    MainMenu.prototype.createNewSlide = function() {
+      var presentation;
+      presentation = Factory.currentPresentation;
+      return presentation.addSlide(DEFAULT_SLIDE);
     };
 
     return MainMenu;
@@ -245,7 +268,7 @@
       } else {
         this.set('slides', [markdown]);
       }
-      return Factory.trigger('slide:added', markdown);
+      return this.trigger('slides:add', markdown);
     };
 
     Presentation.prototype.url = function(slideNumber) {
@@ -334,6 +357,7 @@
       el: $('.authoring menu')
     });
     Factory.Router = new Router;
+    Factory.toggleAutoSave();
     return Backbone.history.start({
       pushState: true
     });

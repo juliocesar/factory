@@ -1,26 +1,43 @@
 # Factory - Interactions
 # ======================
-#
-# The gist:
-#
-# * Each Backbone view is a component that binds to a DOM element
-#   that already exists by the time the app is instantiated.
-# * Components talk to each other by triggering events and passing
-#   data to the global `Factory` object, and by listening to events
-#   on it, so views never talk to each other directly.
 
 # Keep a global reference around, as well as some app-wide methods.
 window.Factory =
+
   # Opens a presentation object.
   open: (presentation, slideNumber = 0) ->
+    @_unbindComponents @currentPresentation if @currentPresentation?
     @currentPresentation = presentation
     @currentSlide = slideNumber
+    @_bindComponents @currentPresentation
     markdown = @currentPresentation.get('slides')[slideNumber]
     Factory.Editor.open markdown
     Factory.SlideViewer.createSlide markdown
-    Factory.SlidesBrowser.loadSlides @currentPresentation.get('slides')
+    @currentPresentation.trigger 'change'
 
-# Make it the app events hub
+  # Bind a presentation to the components
+  _bindComponents: (presentation) ->
+    presentation.on 'change', ->
+      Factory.SlidesBrowser.loadSlides presentation.get 'slides'
+
+  # Unbinds a presentation from the components
+  _unbindComponents: (presentation) ->
+    presentation.off()
+
+  # Saves what's in the text editor to the current slide in the
+  # current presentation
+  saveCurrentPresentation: ->
+    slides = @currentPresentation.get('slides')
+    slides[@currentSlide] = Factory.Editor.$el.val()
+    @currentPresentation.set 'slides': slides
+    @currentPresentation.trigger 'change'
+
+  toggleAutoSave: ->
+    @_autoSaveInterval = setInterval ->
+      Factory.saveCurrentPresentation()
+    , 5000
+
+# Make it the components events hub
 _.extend Factory, Backbone.Events
 
 DEFAULT_SLIDE = """
@@ -32,6 +49,8 @@ DEFAULT_SLIDE = """
   No server setup required. Slides are served straight from
   your browser.
 """
+
+# ---
 
 # The slide text editor
 class Editor extends Backbone.View
@@ -46,18 +65,12 @@ class Editor extends Backbone.View
   # Tracks changes made in the editor and fires editor:updated
   trackTextAreaChanges: ->
     @$el.on 'keyup change cut paste', =>
-      Factory.trigger 'editor:updated', @$el.val()
+      Factory.SlideViewer.updateSlide @$el.val()
 
 # ---
 
 # The right-hand part where the current slide gets shown.
 class SlideViewer extends Backbone.View
-
-  initialize: ->
-    Factory.on 'editor:updated', (markdown) =>
-      @updateSlide markdown
-    Factory.on 'slide:added', (markdown) =>
-      @createSlide markdown
 
   # Creates a new slide
   createSlide: (markdown) ->
@@ -92,8 +105,6 @@ class SlidesBrowser extends Backbone.View
   """
 
   initialize: ->
-    Factory.on 'slide:added', (markdown) =>
-      @addSlide markdown
     Factory.on 'slides:toggle', (showOrHide) =>
       @toggleVisible showOrHide
 
@@ -112,6 +123,11 @@ class SlidesBrowser extends Backbone.View
       summary: @makeSummary markdown
       url: Factory.currentPresentation.url index
     @$el.append $a
+
+  deleteSlide: (slideNumber) ->
+    presentation = Factory.currentPresentation
+    presentation.set
+      slides: presentation.attributes.splice slideNumber, 1
 
   # Loads an array of slides into the list, clearing the
   # existing ones.
@@ -143,7 +159,7 @@ class MainMenu extends Backbone.View
 
   events:
     'click .show-slides' : 'toggleSlides'
-    'click .new-slide'   : 'requestNewSlide'
+    'click .new-slide'   : 'createNewSlide'
 
   # Controls whether the show/hide slides button has/hasn't
   # a "section-visible" class, and gets Factory to fire slides:toggle
@@ -156,8 +172,9 @@ class MainMenu extends Backbone.View
       $button.toggleClass 'section-visible', yes
       Factory.trigger 'slides:toggle', 'show'
 
-  requestNewSlide: ->
-    Factory.trigger 'slide:request'
+  createNewSlide: ->
+    presentation = Factory.currentPresentation
+    presentation.addSlide DEFAULT_SLIDE
 
 # ---
 
@@ -189,7 +206,7 @@ class Presentation extends Backbone.Model
       @save 'slides': slides
     else
       @set 'slides', [markdown]
-    Factory.trigger 'slide:added', markdown
+    @trigger 'slides:add', markdown
 
   # Helper to construct a URL for a presentation. Passing
   # a slide number adds a direct link to it.
@@ -245,5 +262,7 @@ $ ->
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
   Factory.Router        = new Router
+
+  Factory.toggleAutoSave()
 
   Backbone.history.start pushState: true
