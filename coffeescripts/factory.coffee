@@ -7,13 +7,11 @@ window.Factory =
   # Opens a presentation object.
   open: (presentation, slideNumber = 0) ->
     @_unbindComponents @currentPresentation if @currentPresentation?
-    @currentPresentation = presentation
-    @currentSlide = slideNumber
+    @_setCurrent presentation, slideNumber
     @_bindComponents @currentPresentation
-    markdown = @currentPresentation.get('slides')[slideNumber]
+    markdown = presentation.get('slides')[slideNumber]
     Factory.Editor.open markdown
     Factory.SlideViewer.createSlide markdown
-    @currentPresentation.trigger 'change'
 
   # Bind a presentation to the components
   _bindComponents: (presentation) ->
@@ -23,6 +21,11 @@ window.Factory =
   # Unbinds a presentation from the components
   _unbindComponents: (presentation) ->
     presentation.off()
+
+  # Sets the current presentation and slide
+  _setCurrent: (presentation, slideNumber) ->
+    @currentPresentation = presentation
+    @currentSlide = slideNumber
 
   # Saves what's in the text editor to the current slide in the
   # current presentation
@@ -56,7 +59,9 @@ class Editor extends Backbone.View
   open: (markdown) ->
     @$el.val markdown
 
-  # Tracks changes made in the editor and fires editor:updated
+  # Tracks changes made in the editor, and updates the current
+  # slide in the stage and saves the current presentation once
+  # you stop typing for 1s
   trackTextAreaChanges: ->
     @$el.on 'keyup change cut paste', =>
       Factory.SlideViewer.updateSlide @$el.val()
@@ -146,6 +151,7 @@ class SlidesBrowser extends Backbone.View
     $placeholder = $('<div></div>').html marked markdown
     $placeholder.find('*:first-child').text()
 
+  # Clears all slide entries
   empty: ->
     @$el.find('li').remove()
 
@@ -169,6 +175,8 @@ class MainMenu extends Backbone.View
       $button.toggleClass 'section-visible', yes
       Factory.trigger 'slides:toggle', 'show'
 
+  # Creates a new slide by calling addSlide() on a Presentation
+  # instance
   createNewSlide: ->
     presentation = Factory.currentPresentation
     presentation.addSlide DEFAULT_SLIDE
@@ -246,7 +254,8 @@ class Router extends Backbone.Router
     if presentation = Presentation.find presentationId
       Factory.open presentation, slideNumber
 
-  # Creates a new presentation
+  # Creates a new presentation and opens the first slide in
+  # it (number zero)
   new: ->
     Factory.open new Presentation, 0
 
