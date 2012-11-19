@@ -95,10 +95,13 @@ class SlidesBrowser extends Backbone.View
     Factory.on 'slides:toggle', (showOrHide) =>
       @toggleVisible showOrHide
 
-  # Opens a slide when clicking it
+  # Opens a slide when clicking it. Won't do anything if
+  # command+click is pressed, thus being new tab friendly
   open: (event) ->
-    $li = $ event.target
-    Factory.trigger 'slide:open', $li.index()
+    return if event.metaKey
+    event.preventDefault()
+    $link = $ event.target
+    Factory.Router.navigate $link.attr('href'), true
 
   # Adds a slide to the list of slides
   addSlide: (markdown) ->
@@ -111,6 +114,7 @@ class SlidesBrowser extends Backbone.View
   # Loads an array of slides into the list, clearing the
   # existing ones.
   loadSlides: (slides) ->
+    @$el.empty()
     @addSlide slide for slide in slides
 
   # Shows or hides the slides list. Pass 'show' to show,

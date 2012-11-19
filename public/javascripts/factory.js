@@ -121,9 +121,13 @@
     };
 
     SlidesBrowser.prototype.open = function(event) {
-      var $li;
-      $li = $(event.target);
-      return Factory.trigger('slide:open', $li.index());
+      var $link;
+      if (event.metaKey) {
+        return;
+      }
+      event.preventDefault();
+      $link = $(event.target);
+      return Factory.Router.navigate($link.attr('href'), true);
     };
 
     SlidesBrowser.prototype.addSlide = function(markdown) {
@@ -138,6 +142,7 @@
 
     SlidesBrowser.prototype.loadSlides = function(slides) {
       var slide, _i, _len, _results;
+      this.$el.empty();
       _results = [];
       for (_i = 0, _len = slides.length; _i < _len; _i++) {
         slide = slides[_i];
