@@ -15,8 +15,9 @@ window.Factory =
   open: (presentation, slideNumber = 0) ->
     @currentPresentation = presentation
     @currentSlide = slideNumber
-    slide = @currentPresentation.get('slides')[slideNumber]
-    Factory.Editor.open slide
+    markdown = @currentPresentation.get('slides')[slideNumber]
+    Factory.Editor.open markdown
+    Factory.SlideViewer.updateSlide markdown
 
 # Make it the app events hub
 _.extend Factory, Backbone.Events
@@ -147,8 +148,6 @@ class MainMenu extends Backbone.View
 # The presentation model. We won't need a collection for these
 # as we'll be using localStorage for that.
 class Presentation extends Backbone.Model
-  # localStorage: new Backbone.LocalStorage 'factory'
-
   initialize: ->
     Factory.on 'slide:request', => @addSlide DEFAULT_SLIDE
     @set 'id': @makeUniqueId() unless @has 'id'
@@ -191,14 +190,15 @@ class Router extends Backbone.Router
     ''           : 'home'
     'new'        : 'new'
     ':id'        : 'open'
-    ':id/:slide' : 'openSlide'
+    ':id/:slide' : 'open'
 
   home: ->
     @navigate '/new', true
 
-  open: (id) ->
-    presentation = new Presentation id: id
-    Factory.open presentation, 0
+  open: (presentationId, slideIndex = 0) ->
+    presentation = new Presentation id: presentationId
+    presentation.fetch()
+    Factory.open presentation, slideIndex
 
   new: ->
     Factory.open new Presentation, 0

@@ -7,14 +7,15 @@
 
   window.Factory = {
     open: function(presentation, slideNumber) {
-      var slide;
+      var markdown;
       if (slideNumber == null) {
         slideNumber = 0;
       }
       this.currentPresentation = presentation;
       this.currentSlide = slideNumber;
-      slide = this.currentPresentation.get('slides')[slideNumber];
-      return Factory.Editor.open(slide);
+      markdown = this.currentPresentation.get('slides')[slideNumber];
+      Factory.Editor.open(markdown);
+      return Factory.SlideViewer.updateSlide(markdown);
     }
   };
 
@@ -268,19 +269,23 @@
       '': 'home',
       'new': 'new',
       ':id': 'open',
-      ':id/:slide': 'openSlide'
+      ':id/:slide': 'open'
     };
 
     Router.prototype.home = function() {
       return this.navigate('/new', true);
     };
 
-    Router.prototype.open = function(id) {
+    Router.prototype.open = function(presentationId, slideIndex) {
       var presentation;
+      if (slideIndex == null) {
+        slideIndex = 0;
+      }
       presentation = new Presentation({
-        id: id
+        id: presentationId
       });
-      return Factory.open(presentation, 0);
+      presentation.fetch();
+      return Factory.open(presentation, slideIndex);
     };
 
     Router.prototype["new"] = function() {
