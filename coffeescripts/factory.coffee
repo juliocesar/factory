@@ -12,9 +12,11 @@
 # Keep a global reference around, as well as some app-wide methods.
 window.Factory =
   # Opens a presentation object.
-  open: (presentation, slideNumber) ->
+  open: (presentation, slideNumber = 0) ->
     @currentPresentation = presentation
-    Factory.trigger 'slide:navigate', slideNumber
+    @currentSlide = slideNumber
+    slide = @currentPresentation.get('slides')[slideNumber]
+    Factory.Editor.open slide
 
 # Make it the app events hub
 _.extend Factory, Backbone.Events
@@ -33,7 +35,6 @@ DEFAULT_SLIDE = """
 class Editor extends Backbone.View
   initialize: ->
     Factory.on 'slide:added', (markdown) => @open markdown
-
     @trackTextAreaChanges()
 
   # Opens a slide's markdown
@@ -53,10 +54,10 @@ class SlideViewer extends Backbone.View
     Factory.on 'editor:updated', (markdown) =>
       @updateSlide markdown
     Factory.on 'slide:added', (markdown) =>
-      @createSlide markdown
+      @renderSlide markdown
 
   # Creates a new slide
-  createSlide: (markdown) ->
+  renderSlide: (markdown) ->
     @$el.empty()
     @_currentSlide = $slide = $ @make 'div', class: 'slide'
     @$el.append $slide
@@ -75,6 +76,9 @@ class SlideViewer extends Backbone.View
 
 # The slides browser
 class SlidesBrowser extends Backbone.View
+  events:
+    'click li': 'open'
+
   # Slide entry template
   template: _.template """
     <li class="icon-star">
@@ -88,6 +92,11 @@ class SlidesBrowser extends Backbone.View
       @addSlide markdown
     Factory.on 'slides:toggle', (showOrHide) =>
       @toggleVisible showOrHide
+
+  # Opens a slide when clicking it
+  open: (event) ->
+    $li = $ event.target
+    Factory.trigger 'slide:open', $li.index()
 
   # Adds a slide to the list of slides
   addSlide: (markdown) ->
@@ -135,14 +144,14 @@ class MainMenu extends Backbone.View
 
 # ---
 
-# We'll use localStorage to keep presentations like this:
-# localStorage['XXXXX'] = <serialized slides>
-# localStorage['AABBB'] = <serialized slides>
-class Presentation extends Backbone.Model
+# The presentation model. We won't need a collection for these
+# as we'll be using localStorage for that.
+class window.Presentation extends Backbone.Model
+  # localStorage: new Backbone.LocalStorage 'factory'
+
   initialize: ->
     Factory.on 'slide:request', => @addSlide DEFAULT_SLIDE
-    @set 'id', @makeUniqueId() unless @isNew()
-    @localStorage = new Backbone.LocalStorage @id
+    @set 'id': @makeUniqueId() unless @has 'id'
     @makeFirstSlide()
 
   makeUniqueId: ->
@@ -155,10 +164,23 @@ class Presentation extends Backbone.Model
     if @has 'slides'
       slides = @get 'slides'
       slides.push markdown
-      @set 'slides', slides
+      @save 'slides': slides
     else
       @set 'slides', [markdown]
     Factory.trigger 'slide:added', markdown
+
+  # Uses localStorage to store models as localStorage[<model id>]
+  sync: (method, model, options, error) ->
+    switch method
+      when 'create', 'update'
+        localStorage.setItem @id, JSON.stringify model
+      when 'delete'
+        localStorage.removeItem @id
+      when 'read'
+        attributes = localStorage.getItem @id
+        model.attributes = JSON.parse attributes if attributes?
+        model
+    @
 
 # ---
 
@@ -173,6 +195,10 @@ class Router extends Backbone.Router
 
   home: ->
     @navigate '/new', true
+
+  open: (id) ->
+    presentation = new Presentation id: id
+    Factory.open presentation, 0
 
   new: ->
     Factory.open new Presentation, 0

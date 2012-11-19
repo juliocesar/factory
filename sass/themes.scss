@@ -27,6 +27,14 @@ body.theme-default {
     .slides {
       border-bottom: 1px dashed $text-color;
 
+      li {
+        @include transition(background, 0.25s, linear);
+
+        &:hover {
+          background: rgba(black, .05);
+        }
+      }
+
       .delete {
         background-color: transparent;
         color: $text-color;

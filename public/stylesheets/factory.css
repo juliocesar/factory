@@ -1210,12 +1210,23 @@ body.theme-default .authoring .slides {
   border-bottom: 1px dashed #333333;
 }
 /* line 30, ../../sass/themes.scss */
+body.theme-default .authoring .slides li {
+  -webkit-transition: background 0.25s linear;
+  -moz-transition: background 0.25s linear;
+  -ms-transition: background 0.25s linear;
+  transition: background 0.25s linear;
+}
+/* line 33, ../../sass/themes.scss */
+body.theme-default .authoring .slides li:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+/* line 38, ../../sass/themes.scss */
 body.theme-default .authoring .slides .delete {
   background-color: transparent;
   color: #333333;
   border: 0;
 }
-/* line 37, ../../sass/themes.scss */
+/* line 45, ../../sass/themes.scss */
 body.theme-default .authoring textarea {
   -webkit-transition: background 0.25s linear;
   -moz-transition: background 0.25s linear;
@@ -1225,7 +1236,7 @@ body.theme-default .authoring textarea {
   background: transparent;
   color: #262626;
 }
-/* line 43, ../../sass/themes.scss */
+/* line 51, ../../sass/themes.scss */
 body.theme-default .authoring textarea:focus {
   background: rgba(0, 0, 0, 0.05);
 }
@@ -1345,22 +1356,23 @@ body.editing .slide-container {
 .authoring .slides li {
   margin-top: .5rem;
   font-size: 1rem;
+  cursor: pointer;
 }
-/* line 77, ../../sass/factory.scss */
+/* line 79, ../../sass/factory.scss */
 .authoring .slides li:before {
   margin-right: .25rem;
 }
-/* line 79, ../../sass/factory.scss */
+/* line 81, ../../sass/factory.scss */
 .authoring .slides li .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 91, ../../sass/factory.scss */
+/* line 93, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 94, ../../sass/factory.scss */
+/* line 96, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);

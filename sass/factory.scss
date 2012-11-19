@@ -74,6 +74,8 @@ body.editing {
       margin-top: .5rem;
       font-size: 1rem;
 
+      cursor: pointer;
+
       &:before { margin-right: .25rem }
 
       .delete {
