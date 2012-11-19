@@ -34,9 +34,7 @@
       var slides;
       slides = this.currentPresentation.get('slides');
       slides[this.currentSlide] = Factory.Editor.$el.val();
-      this.currentPresentation.set({
-        'slides': slides
-      });
+      this.currentPresentation.set('slides', slides);
       return this.currentPresentation.trigger('change');
     },
     toggleAutoSave: function() {

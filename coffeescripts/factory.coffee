@@ -29,13 +29,7 @@ window.Factory =
   saveCurrentPresentation: ->
     slides = @currentPresentation.get('slides')
     slides[@currentSlide] = Factory.Editor.$el.val()
-    @currentPresentation.set 'slides': slides
-    @currentPresentation.trigger 'change'
-
-  toggleAutoSave: ->
-    @_autoSaveInterval = setInterval ->
-      Factory.saveCurrentPresentation()
-    , 5000
+    @currentPresentation.set 'slides', slides
 
 # Make it the components events hub
 _.extend Factory, Backbone.Events
@@ -66,6 +60,9 @@ class Editor extends Backbone.View
   trackTextAreaChanges: ->
     @$el.on 'keyup change cut paste', =>
       Factory.SlideViewer.updateSlide @$el.val()
+      _.debounce
+        -> Factory.saveCurrentPresentation()
+      , 1000
 
 # ---
 
@@ -127,7 +124,7 @@ class SlidesBrowser extends Backbone.View
   deleteSlide: (slideNumber) ->
     presentation = Factory.currentPresentation
     presentation.set
-      slides: presentation.attributes.splice slideNumber, 1
+      'slides', presentation.attributes.splice slideNumber,1
 
   # Loads an array of slides into the list, clearing the
   # existing ones.
@@ -262,7 +259,5 @@ $ ->
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
   Factory.Router        = new Router
-
-  Factory.toggleAutoSave()
 
   Backbone.history.start pushState: true
