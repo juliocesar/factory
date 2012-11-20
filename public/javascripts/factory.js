@@ -8,7 +8,6 @@
 
   window.Factory = {
     open: function(presentation, slideNumber) {
-      var markdown;
       if (slideNumber == null) {
         slideNumber = 0;
       }
@@ -17,10 +16,9 @@
       }
       this._setCurrent(presentation, slideNumber);
       this._bindComponents(this.currentPresentation);
-      markdown = presentation.get('slides')[slideNumber];
-      Factory.Editor.open(markdown);
-      Factory.SlideViewer.createSlide(markdown);
-      return this.currentPresentation.trigger('change');
+      Factory.Editor.open(presentation.slideAt(slideNumber));
+      Factory.SlideViewer.createSlide(presentation.slideAt(slideNumber));
+      return Factory.SlidesBrowser.loadSlides(presentation.get('slides'));
     },
     _bindComponents: function(presentation) {
       return presentation.on('change', function() {
@@ -38,10 +36,9 @@
       var slides;
       slides = this.currentPresentation.get('slides');
       slides[this.currentSlide] = Factory.Editor.$el.val();
-      this.currentPresentation.save({
+      return this.currentPresentation.save({
         'slides': slides
       });
-      return this.currentPresentation.trigger('change');
     }
   };
 
@@ -186,11 +183,11 @@
     };
 
     SlidesBrowser.prototype.deleteSlide = function(slideNumber) {
-      var presentation;
+      var presentation, slides;
       presentation = Factory.currentPresentation;
-      presentation.set({
-        'slides': presentation.attributes.slides.splice(slideNumber, 1)
-      });
+      slides = Factory.currentPresentation.get('slides');
+      presentation.set(slides, slides.splice(slideNumber, 1));
+      console.log(presentation.get('slides'));
       return Factory.saveCurrentPresentation();
     };
 
@@ -294,18 +291,23 @@
       return Math.random().toString(36).substring(6).toUpperCase();
     };
 
+    Presentation.prototype.slideAt = function(slideNumber) {
+      if (this.has('slides')) {
+        return this.get('slides')[slideNumber];
+      }
+    };
+
     Presentation.prototype.addSlide = function(markdown) {
       var slides;
       if (this.has('slides')) {
         slides = this.get('slides');
         slides.push(markdown);
-        this.save({
+        return this.save({
           'slides': slides
         });
       } else {
-        this.save('slides', [markdown]);
+        return this.save('slides', [markdown]);
       }
-      return this.trigger('change');
     };
 
     Presentation.prototype.url = function(slideNumber) {
@@ -333,9 +335,9 @@
           if (attributes != null) {
             model.attributes = JSON.parse(attributes);
           }
-          model;
-
+          model.trigger('reset');
       }
+      model.trigger('change');
       return this;
     };
 

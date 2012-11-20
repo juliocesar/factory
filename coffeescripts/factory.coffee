@@ -9,10 +9,9 @@ window.Factory =
     @_unbindComponents @currentPresentation if @currentPresentation?
     @_setCurrent presentation, slideNumber
     @_bindComponents @currentPresentation
-    markdown = presentation.get('slides')[slideNumber]
-    Factory.Editor.open markdown
-    Factory.SlideViewer.createSlide markdown
-    @currentPresentation.trigger 'change'
+    Factory.Editor.open presentation.slideAt slideNumber
+    Factory.SlideViewer.createSlide presentation.slideAt slideNumber
+    Factory.SlidesBrowser.loadSlides presentation.get 'slides'
 
   # Bind a presentation to the components
   _bindComponents: (presentation) ->
@@ -34,7 +33,6 @@ window.Factory =
     slides = @currentPresentation.get('slides')
     slides[@currentSlide] = Factory.Editor.$el.val()
     @currentPresentation.save 'slides': slides
-    @currentPresentation.trigger 'change'
 
 # Make it the components events hub
 _.extend Factory, Backbone.Events
@@ -164,8 +162,9 @@ class SlidesBrowser extends Backbone.View
 
   deleteSlide: (slideNumber) ->
     presentation = Factory.currentPresentation
-    presentation.set 'slides':
-      presentation.attributes.slides.splice(slideNumber, 1)
+    slides = Factory.currentPresentation.get 'slides'
+    presentation.set slides, slides.splice(slideNumber, 1)
+    console.log presentation.get('slides')
     Factory.saveCurrentPresentation()
 
   # Loads an array of slides into the list, clearing the
@@ -240,6 +239,10 @@ class Presentation extends Backbone.Model
   makeUniqueId: ->
     Math.random().toString(36).substring(6).toUpperCase()
 
+  # Returns the slide at index `slideNumber`
+  slideAt: (slideNumber) ->
+    @get('slides')[slideNumber] if @has 'slides'
+
   # Adds a slide's markdown to the array of slides
   addSlide: (markdown) ->
     if @has 'slides'
@@ -248,7 +251,6 @@ class Presentation extends Backbone.Model
       @save 'slides': slides
     else
       @save 'slides', [markdown]
-    @trigger 'change'
 
   # Helper to construct a URL for a presentation. Passing
   # a slide number adds a direct link to it.
@@ -267,7 +269,8 @@ class Presentation extends Backbone.Model
       when 'read'
         attributes = localStorage.getItem @id
         model.attributes = JSON.parse attributes if attributes?
-        model
+        model.trigger 'reset'
+    model.trigger 'change'
     @
 
 # ---
