@@ -189,8 +189,6 @@
       presentation.save({
         'slides': slides
       });
-      console.log("Factory.currentSlide: " + Factory.currentSlide + " - " + (typeof Factory.currentSlide));
-      console.log("slideNumber: " + slideNumber + " - " + (typeof slideNumber));
       if (Factory.currentSlide === slideNumber) {
         return Factory.Router.navigate(presentation.url(--slideNumber), true);
       }

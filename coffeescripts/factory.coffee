@@ -167,8 +167,6 @@ class SlidesBrowser extends Backbone.View
     slides = presentation.get 'slides'
     slides.splice slideNumber, 1
     presentation.save 'slides': slides
-    console.log "Factory.currentSlide: #{Factory.currentSlide} - #{typeof Factory.currentSlide}"
-    console.log "slideNumber: #{slideNumber} - #{typeof slideNumber}"
     if Factory.currentSlide is slideNumber
       Factory.Router.navigate presentation.url(--slideNumber), true
 
