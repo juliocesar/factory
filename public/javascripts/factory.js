@@ -38,7 +38,9 @@
       var slides;
       slides = this.currentPresentation.get('slides');
       slides[this.currentSlide] = Factory.Editor.$el.val();
-      this.currentPresentation.set('slides', slides);
+      this.currentPresentation.save({
+        'slides': slides
+      });
       return this.currentPresentation.trigger('change');
     }
   };
@@ -143,7 +145,8 @@
     }
 
     SlidesBrowser.prototype.events = {
-      'click a': 'open'
+      'click a': 'open',
+      'click a button': 'clickDelete'
     };
 
     SlidesBrowser.prototype.template = _.template("<a href=\"<%= url %>\" class=\"icon-star\">\n  <%= summary %>\n  <button class=\"delete icon-trash\"></button>\n</a>");
@@ -175,10 +178,20 @@
       return this.$el.append($a);
     };
 
+    SlidesBrowser.prototype.clickDelete = function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      console.log("DELETING: " + ($(event.target).parent('a').index()));
+      return this.deleteSlide($(event.target).parent('a').index());
+    };
+
     SlidesBrowser.prototype.deleteSlide = function(slideNumber) {
       var presentation;
       presentation = Factory.currentPresentation;
-      return presentation.set('slides', presentation.attributes.splice(slideNumber, 1));
+      presentation.set({
+        'slides': presentation.attributes.slides.splice(slideNumber, 1)
+      });
+      return Factory.saveCurrentPresentation();
     };
 
     SlidesBrowser.prototype.loadSlides = function(slides) {
@@ -290,9 +303,9 @@
           'slides': slides
         });
       } else {
-        this.set('slides', [markdown]);
+        this.save('slides', [markdown]);
       }
-      return this.trigger('slides:add', markdown);
+      return this.trigger('change');
     };
 
     Presentation.prototype.url = function(slideNumber) {

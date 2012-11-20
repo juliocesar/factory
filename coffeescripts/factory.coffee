@@ -33,7 +33,7 @@ window.Factory =
   saveCurrentPresentation: ->
     slides = @currentPresentation.get('slides')
     slides[@currentSlide] = Factory.Editor.$el.val()
-    @currentPresentation.set 'slides', slides
+    @currentPresentation.save 'slides': slides
     @currentPresentation.trigger 'change'
 
 # Make it the components events hub
@@ -126,6 +126,7 @@ class SlidesBrowser extends Backbone.View
 
   events:
     'click a': 'open'
+    'click a button': 'clickDelete'
 
   # Slide entry template
   template: _.template """
@@ -155,10 +156,17 @@ class SlidesBrowser extends Backbone.View
       url: Factory.currentPresentation.url index
     @$el.append $a
 
+  clickDelete: (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    console.log "DELETING: #{$(event.target).parent('a').index()}"
+    @deleteSlide $(event.target).parent('a').index()
+
   deleteSlide: (slideNumber) ->
     presentation = Factory.currentPresentation
-    presentation.set 'slides',
-      presentation.attributes.splice slideNumber,1
+    presentation.set 'slides':
+      presentation.attributes.slides.splice(slideNumber, 1)
+    Factory.saveCurrentPresentation()
 
   # Loads an array of slides into the list, clearing the
   # existing ones.
@@ -239,8 +247,8 @@ class Presentation extends Backbone.Model
       slides.push markdown
       @save 'slides': slides
     else
-      @set 'slides', [markdown]
-    @trigger 'slides:add', markdown
+      @save 'slides', [markdown]
+    @trigger 'change'
 
   # Helper to construct a URL for a presentation. Passing
   # a slide number adds a direct link to it.
