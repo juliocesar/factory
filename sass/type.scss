@@ -20,8 +20,13 @@ body, input, select, button, textarea {
     font-size: 3.4rem;
   }
 
-  p {
+  p, li, code, blockquote {
     margin: 1.2rem 0 1.2rem 0;
     font-size: 1.6rem;
+  }
+
+  code {
+    font-family: Monaco, sans-serif;
+    font-size: .8rem;
   }
 }

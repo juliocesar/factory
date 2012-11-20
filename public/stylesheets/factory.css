@@ -1240,6 +1240,10 @@ body.theme-default .authoring textarea {
 body.theme-default .authoring textarea:focus, body.theme-default .authoring textarea:hover {
   background: rgba(0, 0, 0, 0.05);
 }
+/* line 58, ../../sass/themes.scss */
+body.theme-default .slide pre {
+  background: rgba(0, 0, 0, 0.05);
+}
 
 /* line 4, ../../sass/type.scss */
 body, input, select, button, textarea {
@@ -1265,9 +1269,14 @@ body, input, select, button, textarea {
   font-size: 3.4rem;
 }
 /* line 23, ../../sass/type.scss */
-.slide p {
+.slide p, .slide li, .slide code, .slide blockquote {
   margin: 1.2rem 0 1.2rem 0;
   font-size: 1.6rem;
+}
+/* line 28, ../../sass/type.scss */
+.slide code {
+  font-family: Monaco, sans-serif;
+  font-size: .8rem;
 }
 
 /* line 11, ../../sass/factory.scss */
