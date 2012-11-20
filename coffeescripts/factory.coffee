@@ -12,6 +12,7 @@ window.Factory =
     markdown = presentation.get('slides')[slideNumber]
     Factory.Editor.open markdown
     Factory.SlideViewer.createSlide markdown
+    @currentPresentation.trigger 'change'
 
   # Bind a presentation to the components
   _bindComponents: (presentation) ->
@@ -33,6 +34,7 @@ window.Factory =
     slides = @currentPresentation.get('slides')
     slides[@currentSlide] = Factory.Editor.$el.val()
     @currentPresentation.set 'slides', slides
+    @currentPresentation.trigger 'change'
 
 # Make it the components events hub
 _.extend Factory, Backbone.Events
@@ -52,6 +54,12 @@ DEFAULT_SLIDE = """
 # The slide text editor
 class Editor extends Backbone.View
 
+  # Ignore these keys when pressed in the textarea
+  keysBlacklist: [
+    16, 17, 18, 20 # SHIFT, CTRL, ALT, CAPS LOCK
+    37, 38, 39, 40 # Keyboard arrows
+  ]
+
   initialize: ->
     @trackTextAreaChanges()
 
@@ -63,11 +71,32 @@ class Editor extends Backbone.View
   # slide in the stage and saves the current presentation once
   # you stop typing for 1s
   trackTextAreaChanges: ->
-    @$el.on 'keyup change cut paste', =>
+    @_debouncedSave ?= _.debounce ->
+      Factory.saveCurrentPresentation()
+    , 1000
+    @$el.on 'keyup change cut paste', (event) =>
+      return if event.keyCode in @keysBlacklist
       Factory.SlideViewer.updateSlide @$el.val()
-      _.debounce
-        -> Factory.saveCurrentPresentation()
-      , 1000
+      @_debouncedSave()
+    @$el.on 'keydown', (event) =>
+      if event.keyCode is 9
+        event.preventDefault()
+        return @addTab event.target
+
+  # Adds a tab where the cursor is when TAB is pressed.
+  addTab: (textarea) ->
+    start = textarea.selectionStart
+    end = textarea.selectionEnd
+    $textarea = $ textarea
+    markdown = $textarea.val()
+
+    $textarea.val [
+      markdown.substring(0, start)
+      "  "
+      markdown.substring(end)
+    ].join ''
+
+    textarea.selectionStart = textarea.selectionEnd = start + 2
 
 # ---
 
@@ -128,8 +157,8 @@ class SlidesBrowser extends Backbone.View
 
   deleteSlide: (slideNumber) ->
     presentation = Factory.currentPresentation
-    presentation.set
-      'slides', presentation.attributes.splice slideNumber,1
+    presentation.set 'slides',
+      presentation.attributes.splice slideNumber,1
 
   # Loads an array of slides into the list, clearing the
   # existing ones.

@@ -3,6 +3,7 @@
   var DEFAULT_SLIDE, Editor, MainMenu, Presentation, Router, SlideViewer, SlidesBrowser,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __slice = [].slice;
 
   window.Factory = {
@@ -14,10 +15,9 @@
       if (this.currentPresentation != null) {
         this._unbindComponents(this.currentPresentation);
       }
-      this.currentPresentation = presentation;
-      this.currentSlide = slideNumber;
+      this._setCurrent(presentation, slideNumber);
       this._bindComponents(this.currentPresentation);
-      markdown = this.currentPresentation.get('slides')[slideNumber];
+      markdown = presentation.get('slides')[slideNumber];
       Factory.Editor.open(markdown);
       Factory.SlideViewer.createSlide(markdown);
       return this.currentPresentation.trigger('change');
@@ -30,17 +30,16 @@
     _unbindComponents: function(presentation) {
       return presentation.off();
     },
+    _setCurrent: function(presentation, slideNumber) {
+      this.currentPresentation = presentation;
+      return this.currentSlide = slideNumber;
+    },
     saveCurrentPresentation: function() {
       var slides;
       slides = this.currentPresentation.get('slides');
       slides[this.currentSlide] = Factory.Editor.$el.val();
       this.currentPresentation.set('slides', slides);
       return this.currentPresentation.trigger('change');
-    },
-    toggleAutoSave: function() {
-      return this._autoSaveInterval = setInterval(function() {
-        return Factory.saveCurrentPresentation();
-      }, 5000);
     }
   };
 
@@ -56,6 +55,8 @@
       return Editor.__super__.constructor.apply(this, arguments);
     }
 
+    Editor.prototype.keysBlacklist = [16, 17, 18, 20, 37, 38, 39, 40];
+
     Editor.prototype.initialize = function() {
       return this.trackTextAreaChanges();
     };
@@ -65,10 +66,37 @@
     };
 
     Editor.prototype.trackTextAreaChanges = function() {
-      var _this = this;
-      return this.$el.on('keyup change cut paste', function() {
-        return Factory.SlideViewer.updateSlide(_this.$el.val());
+      var _ref,
+        _this = this;
+      if ((_ref = this._debouncedSave) == null) {
+        this._debouncedSave = _.debounce(function() {
+          return Factory.saveCurrentPresentation();
+        }, 1000);
+      }
+      this.$el.on('keyup change cut paste', function(event) {
+        var _ref1;
+        if (_ref1 = event.keyCode, __indexOf.call(_this.keysBlacklist, _ref1) >= 0) {
+          return;
+        }
+        Factory.SlideViewer.updateSlide(_this.$el.val());
+        return _this._debouncedSave();
       });
+      return this.$el.on('keydown', function(event) {
+        if (event.keyCode === 9) {
+          event.preventDefault();
+          return _this.addTab(event.target);
+        }
+      });
+    };
+
+    Editor.prototype.addTab = function(textarea) {
+      var $textarea, end, markdown, start;
+      start = textarea.selectionStart;
+      end = textarea.selectionEnd;
+      $textarea = $(textarea);
+      markdown = $textarea.val();
+      $textarea.val([markdown.substring(0, start), "  ", markdown.substring(end)].join(''));
+      return textarea.selectionStart = textarea.selectionEnd = start + 2;
     };
 
     return Editor;
@@ -150,9 +178,7 @@
     SlidesBrowser.prototype.deleteSlide = function(slideNumber) {
       var presentation;
       presentation = Factory.currentPresentation;
-      return presentation.set({
-        slides: presentation.attributes.splice(slideNumber, 1)
-      });
+      return presentation.set('slides', presentation.attributes.splice(slideNumber, 1));
     };
 
     SlidesBrowser.prototype.loadSlides = function(slides) {
@@ -355,7 +381,6 @@
       el: $('.authoring menu')
     });
     Factory.Router = new Router;
-    Factory.toggleAutoSave();
     return Backbone.history.start({
       pushState: true
     });
