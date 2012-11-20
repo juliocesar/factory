@@ -70,7 +70,7 @@
       if ((_ref = this._debouncedSave) == null) {
         this._debouncedSave = _.debounce(function() {
           return Factory.saveCurrentPresentation();
-        }, 1000);
+        }, 250);
       }
       this.$el.on('keyup change cut paste', function(event) {
         var _ref1;
@@ -178,17 +178,22 @@
     SlidesBrowser.prototype.clickDelete = function(event) {
       event.preventDefault();
       event.stopPropagation();
-      console.log("DELETING: " + ($(event.target).parent('a').index()));
       return this.deleteSlide($(event.target).parent('a').index());
     };
 
     SlidesBrowser.prototype.deleteSlide = function(slideNumber) {
       var presentation, slides;
       presentation = Factory.currentPresentation;
-      slides = Factory.currentPresentation.get('slides');
-      presentation.set(slides, slides.splice(slideNumber, 1));
-      console.log(presentation.get('slides'));
-      return Factory.saveCurrentPresentation();
+      slides = presentation.get('slides');
+      slides.splice(slideNumber, 1);
+      presentation.save({
+        'slides': slides
+      });
+      console.log("Factory.currentSlide: " + Factory.currentSlide + " - " + (typeof Factory.currentSlide));
+      console.log("slideNumber: " + slideNumber + " - " + (typeof slideNumber));
+      if (Factory.currentSlide === slideNumber) {
+        return Factory.Router.navigate(presentation.url(--slideNumber), true);
+      }
     };
 
     SlidesBrowser.prototype.loadSlides = function(slides) {
@@ -213,7 +218,7 @@
     SlidesBrowser.prototype.makeSummary = function(markdown) {
       var $placeholder;
       $placeholder = $('<div></div>').html(marked(markdown));
-      return $placeholder.find('*:first-child').text();
+      return $placeholder.find('*:first').text();
     };
 
     SlidesBrowser.prototype.empty = function() {
@@ -370,7 +375,7 @@
         slideNumber = 0;
       }
       if (presentation = Presentation.find(presentationId)) {
-        return Factory.open(presentation, slideNumber);
+        return Factory.open(presentation, +slideNumber);
       }
     };
 

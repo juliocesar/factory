@@ -71,7 +71,7 @@ class Editor extends Backbone.View
   trackTextAreaChanges: ->
     @_debouncedSave ?= _.debounce ->
       Factory.saveCurrentPresentation()
-    , 1000
+    , 250
     @$el.on 'keyup change cut paste', (event) =>
       return if event.keyCode in @keysBlacklist
       Factory.SlideViewer.updateSlide @$el.val()
@@ -154,18 +154,23 @@ class SlidesBrowser extends Backbone.View
       url: Factory.currentPresentation.url index
     @$el.append $a
 
+  # Callback for handling clicking the delete icon in a
+  # slide link
   clickDelete: (event) ->
     event.preventDefault()
     event.stopPropagation()
-    console.log "DELETING: #{$(event.target).parent('a').index()}"
     @deleteSlide $(event.target).parent('a').index()
 
+  # Deletes a slide by index in the `attributes.slides` array
   deleteSlide: (slideNumber) ->
     presentation = Factory.currentPresentation
-    slides = Factory.currentPresentation.get 'slides'
-    presentation.set slides, slides.splice(slideNumber, 1)
-    console.log presentation.get('slides')
-    Factory.saveCurrentPresentation()
+    slides = presentation.get 'slides'
+    slides.splice slideNumber, 1
+    presentation.save 'slides': slides
+    console.log "Factory.currentSlide: #{Factory.currentSlide} - #{typeof Factory.currentSlide}"
+    console.log "slideNumber: #{slideNumber} - #{typeof slideNumber}"
+    if Factory.currentSlide is slideNumber
+      Factory.Router.navigate presentation.url(--slideNumber), true
 
   # Loads an array of slides into the list, clearing the
   # existing ones.
@@ -185,7 +190,7 @@ class SlidesBrowser extends Backbone.View
   # so @addSlide can show a preview
   makeSummary: (markdown) ->
     $placeholder = $('<div></div>').html marked markdown
-    $placeholder.find('*:first-child').text()
+    $placeholder.find('*:first').text()
 
   # Clears all slide entries
   empty: ->
@@ -292,7 +297,7 @@ class Router extends Backbone.Router
   # to it
   open: (presentationId, slideNumber = 0) ->
     if presentation = Presentation.find presentationId
-      Factory.open presentation, slideNumber
+      Factory.open presentation, +slideNumber
 
   # Creates a new presentation and opens the first slide in
   # it (number zero)
