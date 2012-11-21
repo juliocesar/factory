@@ -46,8 +46,12 @@ body.editing {
     top: $page-padding;
     left: $page-padding*2;
 
-    button {
+    button, a {
+      display: inline-block;
+      width: 2rem;
+      padding: 0;
       border: 0;
+      text-align: center;
       background: transparent;
     }
   }
@@ -100,6 +104,10 @@ body.editing {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 100%
+    width: 100%;
+
+    pre {
+      padding: $page-padding
+    }
   }
 }

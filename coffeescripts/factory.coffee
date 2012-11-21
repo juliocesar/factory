@@ -168,7 +168,12 @@ class SlidesBrowser extends Backbone.View
     slides.splice slideNumber, 1
     presentation.save 'slides': slides
     if Factory.currentSlide is slideNumber
-      Factory.Router.navigate presentation.url(--slideNumber), true
+      previous = slideNumber - 1
+      url = if previous < 0
+              presentation.url()
+            else
+              presentation.url previous
+      Factory.Router.navigate url, true
 
   # Loads an array of slides into the list, clearing the
   # existing ones.
@@ -200,8 +205,9 @@ class SlidesBrowser extends Backbone.View
 class MainMenu extends Backbone.View
 
   events:
-    'click .show-slides' : 'toggleSlides'
-    'click .new-slide'   : 'createNewSlide'
+    'click .show-slides'      : 'toggleSlides'
+    'click .new-slide'        : 'createNewSlide'
+    'click .new-presentation' : 'createNewPresentation'
 
   # Controls whether the show/hide slides button has/hasn't
   # a "section-visible" class, and gets Factory to fire slides:toggle
@@ -219,6 +225,9 @@ class MainMenu extends Backbone.View
   createNewSlide: ->
     presentation = Factory.currentPresentation
     presentation.addSlide DEFAULT_SLIDE
+
+  createNewPresentation: ->
+
 
 # ---
 

@@ -1193,40 +1193,40 @@ body.theme-default .authoring {
   box-shadow: inset -0.1rem 0 0.5rem #b3b3b3;
   background-color: #dde0d8;
 }
-/* line 18, ../../sass/themes.scss */
-body.theme-default .authoring menu button {
+/* line 19, ../../sass/themes.scss */
+body.theme-default .authoring menu button, body.theme-default .authoring menu a {
   -webkit-transition: color 0.25s linear;
   -moz-transition: color 0.25s linear;
   -ms-transition: color 0.25s linear;
   transition: color 0.25s linear;
   color: rgba(51, 51, 51, 0.6);
 }
-/* line 22, ../../sass/themes.scss */
-body.theme-default .authoring menu button:hover, body.theme-default .authoring menu button.section-visible {
+/* line 23, ../../sass/themes.scss */
+body.theme-default .authoring menu button:hover, body.theme-default .authoring menu button.section-visible, body.theme-default .authoring menu a:hover, body.theme-default .authoring menu a.section-visible {
   color: #333333;
 }
-/* line 27, ../../sass/themes.scss */
+/* line 29, ../../sass/themes.scss */
 body.theme-default .authoring .slides {
   border-bottom: 1px dashed #333333;
 }
-/* line 30, ../../sass/themes.scss */
+/* line 32, ../../sass/themes.scss */
 body.theme-default .authoring .slides a {
   -webkit-transition: background 0.25s linear;
   -moz-transition: background 0.25s linear;
   -ms-transition: background 0.25s linear;
   transition: background 0.25s linear;
 }
-/* line 33, ../../sass/themes.scss */
+/* line 35, ../../sass/themes.scss */
 body.theme-default .authoring .slides a:hover {
   background: rgba(0, 0, 0, 0.05);
 }
-/* line 38, ../../sass/themes.scss */
+/* line 40, ../../sass/themes.scss */
 body.theme-default .authoring .slides .delete {
   background-color: transparent;
   color: #333333;
   border: 0;
 }
-/* line 45, ../../sass/themes.scss */
+/* line 47, ../../sass/themes.scss */
 body.theme-default .authoring textarea {
   -webkit-transition: background 0.25s linear;
   -moz-transition: background 0.25s linear;
@@ -1236,11 +1236,11 @@ body.theme-default .authoring textarea {
   background: transparent;
   color: #262626;
 }
-/* line 51, ../../sass/themes.scss */
+/* line 53, ../../sass/themes.scss */
 body.theme-default .authoring textarea:focus, body.theme-default .authoring textarea:hover {
   background: rgba(0, 0, 0, 0.05);
 }
-/* line 58, ../../sass/themes.scss */
+/* line 60, ../../sass/themes.scss */
 body.theme-default .slide pre {
   background: rgba(0, 0, 0, 0.05);
 }
@@ -1250,30 +1250,30 @@ body, input, select, button, textarea {
   font-family: "PT Sans Narrow", "Helvetica Neue", sans-serif;
 }
 
-/* line 9, ../../sass/type.scss */
-.authoring menu button {
+/* line 10, ../../sass/type.scss */
+.authoring menu button, .authoring menu a {
   font-size: 1.2rem;
 }
-/* line 10, ../../sass/type.scss */
+/* line 12, ../../sass/type.scss */
 .authoring textarea {
   font-size: 1rem;
 }
 
-/* line 15, ../../sass/type.scss */
+/* line 17, ../../sass/type.scss */
 .slide {
   margin: 0;
 }
-/* line 18, ../../sass/type.scss */
+/* line 20, ../../sass/type.scss */
 .slide h1 {
   margin: 0 0 1.2rem 0;
   font-size: 3.4rem;
 }
-/* line 23, ../../sass/type.scss */
+/* line 25, ../../sass/type.scss */
 .slide p, .slide li, .slide code, .slide blockquote {
   margin: 1.2rem 0 1.2rem 0;
   font-size: 1.6rem;
 }
-/* line 28, ../../sass/type.scss */
+/* line 30, ../../sass/type.scss */
 .slide code {
   font-family: Monaco, sans-serif;
   font-size: .8rem;
@@ -1338,30 +1338,34 @@ body.editing .slide-container {
   left: 1.2rem;
 }
 /* line 49, ../../sass/factory.scss */
-.authoring menu button {
+.authoring menu button, .authoring menu a {
+  display: inline-block;
+  width: 2rem;
+  padding: 0;
   border: 0;
+  text-align: center;
   background: transparent;
 }
-/* line 55, ../../sass/factory.scss */
+/* line 59, ../../sass/factory.scss */
 .authoring .writing {
   height: 100%;
 }
-/* line 58, ../../sass/factory.scss */
+/* line 62, ../../sass/factory.scss */
 .authoring .writing form, .authoring .writing form textarea {
   height: 100%;
   width: 100%;
 }
-/* line 63, ../../sass/factory.scss */
+/* line 67, ../../sass/factory.scss */
 .authoring .writing textarea {
   padding: 0.6rem;
 }
-/* line 68, ../../sass/factory.scss */
+/* line 72, ../../sass/factory.scss */
 .authoring .slides {
   margin: 0;
   min-height: 20%;
   list-style: none;
 }
-/* line 73, ../../sass/factory.scss */
+/* line 77, ../../sass/factory.scss */
 .authoring .slides a {
   display: block;
   margin-top: .5rem;
@@ -1370,21 +1374,21 @@ body.editing .slide-container {
   text-decoration: none;
   cursor: pointer;
 }
-/* line 81, ../../sass/factory.scss */
+/* line 85, ../../sass/factory.scss */
 .authoring .slides a:before {
   margin-right: .25rem;
 }
-/* line 83, ../../sass/factory.scss */
+/* line 87, ../../sass/factory.scss */
 .authoring .slides a .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 95, ../../sass/factory.scss */
+/* line 99, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 98, ../../sass/factory.scss */
+/* line 102, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
@@ -1394,4 +1398,8 @@ body.editing .slide-container {
   top: 50%;
   left: 50%;
   width: 100%;
+}
+/* line 109, ../../sass/factory.scss */
+.slide-container .slide pre {
+  padding: 0.6rem;
 }

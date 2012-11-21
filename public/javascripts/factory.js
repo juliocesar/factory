@@ -182,7 +182,7 @@
     };
 
     SlidesBrowser.prototype.deleteSlide = function(slideNumber) {
-      var presentation, slides;
+      var presentation, previous, slides, url;
       presentation = Factory.currentPresentation;
       slides = presentation.get('slides');
       slides.splice(slideNumber, 1);
@@ -190,7 +190,9 @@
         'slides': slides
       });
       if (Factory.currentSlide === slideNumber) {
-        return Factory.Router.navigate(presentation.url(--slideNumber), true);
+        previous = slideNumber - 1;
+        url = previous < 0 ? presentation.url() : presentation.url(previous);
+        return Factory.Router.navigate(url, true);
       }
     };
 
@@ -237,7 +239,8 @@
 
     MainMenu.prototype.events = {
       'click .show-slides': 'toggleSlides',
-      'click .new-slide': 'createNewSlide'
+      'click .new-slide': 'createNewSlide',
+      'click .new-presentation': 'createNewPresentation'
     };
 
     MainMenu.prototype.toggleSlides = function() {
@@ -257,6 +260,8 @@
       presentation = Factory.currentPresentation;
       return presentation.addSlide(DEFAULT_SLIDE);
     };
+
+    MainMenu.prototype.createNewPresentation = function() {};
 
     return MainMenu;
 
