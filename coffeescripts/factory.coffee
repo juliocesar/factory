@@ -123,7 +123,7 @@ class SlideViewer extends Backbone.View
 class SlidesBrowser extends Backbone.View
 
   events:
-    'click a': 'open'
+    # 'click a': 'open'
     'click a button': 'clickDelete'
 
   # Slide entry template
@@ -137,14 +137,6 @@ class SlidesBrowser extends Backbone.View
   initialize: ->
     Factory.on 'slides:toggle', (showOrHide) =>
       @toggleVisible showOrHide
-
-  # Opens a slide when clicking it. Won't do anything if
-  # command+click is pressed, thus being new tab friendly
-  open: (event) ->
-    return if event.metaKey
-    event.preventDefault()
-    $link = $ event.target
-    Factory.Router.navigate $link.attr('href'), true
 
   # Adds a slide to the list of slides
   addSlide: (markdown) ->
@@ -227,7 +219,6 @@ class MainMenu extends Backbone.View
     presentation.addSlide DEFAULT_SLIDE
 
   createNewPresentation: ->
-
 
 # ---
 
@@ -313,6 +304,20 @@ class Router extends Backbone.Router
 
 # ---
 
+# Assorted helpers
+
+# Ensures local links behave nicely by allowing the user to
+# open them in a new tab
+catchLinkClicks = ->
+  $(document).on 'click', 'a', (event) ->
+    $link = $ event.target
+    if $link.is 'a[href^="/"]'
+      return if event.metaKey
+      event.preventDefault()
+      Factory.Router.navigate $link.attr('href'), true
+
+# ---
+
 # Boot it up
 $ ->
   Factory.Editor        = new Editor el: $('.writing textarea')
@@ -320,5 +325,7 @@ $ ->
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
   Factory.Router        = new Router
+
+  catchLinkClicks()
 
   Backbone.history.start pushState: true
