@@ -1344,28 +1344,29 @@ body.editing .slide-container {
   padding: 0;
   border: 0;
   text-align: center;
+  text-decoration: none;
   background: transparent;
 }
-/* line 59, ../../sass/factory.scss */
+/* line 60, ../../sass/factory.scss */
 .authoring .writing {
   height: 100%;
 }
-/* line 62, ../../sass/factory.scss */
+/* line 63, ../../sass/factory.scss */
 .authoring .writing form, .authoring .writing form textarea {
   height: 100%;
   width: 100%;
 }
-/* line 67, ../../sass/factory.scss */
+/* line 68, ../../sass/factory.scss */
 .authoring .writing textarea {
   padding: 0.6rem;
 }
-/* line 72, ../../sass/factory.scss */
+/* line 73, ../../sass/factory.scss */
 .authoring .slides {
   margin: 0;
   min-height: 20%;
   list-style: none;
 }
-/* line 77, ../../sass/factory.scss */
+/* line 78, ../../sass/factory.scss */
 .authoring .slides a {
   display: block;
   margin-top: .5rem;
@@ -1374,21 +1375,21 @@ body.editing .slide-container {
   text-decoration: none;
   cursor: pointer;
 }
-/* line 85, ../../sass/factory.scss */
+/* line 86, ../../sass/factory.scss */
 .authoring .slides a:before {
   margin-right: .25rem;
 }
-/* line 87, ../../sass/factory.scss */
+/* line 88, ../../sass/factory.scss */
 .authoring .slides a .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 99, ../../sass/factory.scss */
+/* line 100, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 102, ../../sass/factory.scss */
+/* line 103, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
@@ -1399,7 +1400,7 @@ body.editing .slide-container {
   left: 50%;
   width: 100%;
 }
-/* line 109, ../../sass/factory.scss */
+/* line 110, ../../sass/factory.scss */
 .slide-container .slide pre {
   padding: 0.6rem;
 }
