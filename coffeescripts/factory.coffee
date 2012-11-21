@@ -49,6 +49,35 @@ DEFAULT_SLIDE = """
 
 # ---
 
+# Assorted helpers
+
+# Ensures local links behave nicely by allowing the user to
+# open them in a new tab
+catchLinkClicks = ->
+  $(document).on 'click', 'a', (event) ->
+    $link = $ event.target
+    if $link.is 'a[href^="/"]'
+      return if event.metaKey
+      event.preventDefault()
+      Factory.Router.navigate $link.attr('href'), true
+
+# Backbone.Model drop in sync() method that saves a model to
+# localStorage
+localStorageSync = (method, model, rest...) ->
+  switch method
+    when 'create', 'update'
+      localStorage.setItem @id, JSON.stringify model
+    when 'delete'
+      localStorage.removeItem @id
+    when 'read'
+      attributes = localStorage.getItem @id
+      model.attributes = JSON.parse attributes if attributes?
+      model.trigger 'reset'
+  model.trigger 'change'
+  @
+
+# ---
+
 # The slide text editor
 class Editor extends Backbone.View
 
@@ -199,7 +228,6 @@ class MainMenu extends Backbone.View
   events:
     'click .show-slides'      : 'toggleSlides'
     'click .new-slide'        : 'createNewSlide'
-    'click .new-presentation' : 'createNewPresentation'
 
   # Controls whether the show/hide slides button has/hasn't
   # a "section-visible" class, and gets Factory to fire slides:toggle
@@ -218,8 +246,6 @@ class MainMenu extends Backbone.View
     presentation = Factory.currentPresentation
     presentation.addSlide DEFAULT_SLIDE
 
-  createNewPresentation: ->
-
 # ---
 
 # The presentation model. We won't need a collection for these
@@ -232,6 +258,9 @@ class Presentation extends Backbone.Model
       presentation = new Presentation id: id
       presentation.fetch()
       presentation
+
+  # Use localStorage to store models as localStorage[<model id>]
+  sync: localStorageSync
 
   initialize: ->
     if @isNew()
@@ -262,20 +291,6 @@ class Presentation extends Backbone.Model
     url += "/#{slideNumber}" if slideNumber?
     url
 
-  # Use localStorage to store models as localStorage[<model id>]
-  sync: (method, model, rest...) ->
-    switch method
-      when 'create', 'update'
-        localStorage.setItem @id, JSON.stringify model
-      when 'delete'
-        localStorage.removeItem @id
-      when 'read'
-        attributes = localStorage.getItem @id
-        model.attributes = JSON.parse attributes if attributes?
-        model.trigger 'reset'
-    model.trigger 'change'
-    @
-
 # ---
 
 # Sadly, this since is a self-contained client-side app, we'll
@@ -301,20 +316,6 @@ class Router extends Backbone.Router
   # it (number zero)
   new: ->
     Factory.open new Presentation, 0
-
-# ---
-
-# Assorted helpers
-
-# Ensures local links behave nicely by allowing the user to
-# open them in a new tab
-catchLinkClicks = ->
-  $(document).on 'click', 'a', (event) ->
-    $link = $ event.target
-    if $link.is 'a[href^="/"]'
-      return if event.metaKey
-      event.preventDefault()
-      Factory.Router.navigate $link.attr('href'), true
 
 # ---
 
