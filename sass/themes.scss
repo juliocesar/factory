@@ -1,9 +1,11 @@
-@import 'compass/css3/box-shadow';
-
 // Themes
 // ======
 
-// Factory
+// Themes are activated by adding their coresponding class to the
+// <body>.
+
+// Default
+@import 'compass/css3/box-shadow';
 body.theme-default {
   $background-color: #e9ebe6;
   $text-color: #333;
@@ -63,3 +65,4 @@ body.theme-default {
   }
 }
 
+// ---
