@@ -228,8 +228,9 @@ class SlidesBrowser extends Backbone.View
 class MainMenu extends Backbone.View
 
   events:
-    'click .show-slides'      : 'toggleSlides'
-    'click .new-slide'        : 'createNewSlide'
+    'click .show-slides'         : 'toggleSlides'
+    'click .new-slide'           : 'createNewSlide'
+    'click .delete-presentation' : 'deletePresentation'
 
   # Controls whether the show/hide slides button has/hasn't
   # a "section-visible" class, and gets Factory to fire slides:toggle
@@ -247,6 +248,13 @@ class MainMenu extends Backbone.View
   createNewSlide: ->
     presentation = Factory.currentPresentation
     presentation.addSlide DEFAULT_SLIDE
+
+  # Deletes the current presentation upon confirmation
+  deletePresentation: ->
+    if confirm "Delete this presentation?"
+      Factory.currentPresentation.destroy()
+      Factory.Router.navigate '/new', true
+
 
 # ---
 

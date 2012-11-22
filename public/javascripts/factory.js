@@ -270,7 +270,8 @@
 
     MainMenu.prototype.events = {
       'click .show-slides': 'toggleSlides',
-      'click .new-slide': 'createNewSlide'
+      'click .new-slide': 'createNewSlide',
+      'click .delete-presentation': 'deletePresentation'
     };
 
     MainMenu.prototype.toggleSlides = function() {
@@ -289,6 +290,13 @@
       var presentation;
       presentation = Factory.currentPresentation;
       return presentation.addSlide(DEFAULT_SLIDE);
+    };
+
+    MainMenu.prototype.deletePresentation = function() {
+      if (confirm("Delete this presentation?")) {
+        Factory.currentPresentation.destroy();
+        return Factory.Router.navigate('/new', true);
+      }
     };
 
     return MainMenu;
