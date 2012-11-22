@@ -10,10 +10,19 @@ $page-padding: .6rem;
 
 html, body { height: 100%; overflow: hidden }
 
+.authoring,
+.slide-container,
+.presentations-browser { position: absolute }
+
 .authoring, .slide-container {
-  position: absolute;
   top: 0;
   bottom: 0;
+}
+
+.presentations-browser {
+  @include translate(-50%, -50%);
+  top: 50%;
+  left: 50%
 }
 
 .authoring       { left: 0 }
@@ -106,9 +115,42 @@ body.editing {
     top: 50%;
     left: 50%;
     width: 100%;
+    margin: 0;
 
     pre {
       padding: $page-padding
+    }
+  }
+}
+
+// ---
+
+// Presentations browser
+
+.presentations-browser {
+  display: none;
+  width: 75%;
+  height: 75%;
+  margin: 0;
+  padding: $page-padding*2;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  li {
+    position: relative;
+    display: inline-block;
+    margin: 0 $page-padding*1.5 $page-padding 0;
+    width: 7rem;
+    height: 6rem;
+    overflow: hidden;
+
+    .slide-thumb {
+      @include translate(-50%, -60%);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      margin: 0 $page-padding/2 0 $page-padding/2;
     }
   }
 }

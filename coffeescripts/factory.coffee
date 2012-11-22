@@ -255,7 +255,6 @@ class MainMenu extends Backbone.View
       Factory.currentPresentation.destroy()
       Factory.Router.navigate '/new', true
 
-
 # ---
 
 # The presentation model. We won't need a collection for these
@@ -300,6 +299,40 @@ class Presentation extends Backbone.Model
     url = "/#{@id}"
     url += "/#{slideNumber}" if slideNumber?
     url
+
+# ---
+
+# The presentations browser, so you can navigate all the presentations
+# kept in localStorage
+
+class PresentationsBrowser extends Backbone.View
+
+  template: _.template """
+    <li data-presentation-link="<%= url() %>"></li>
+  """
+
+  # Since localStorage is ready as soon as the browser opens, it's
+  # safe to load what's in it as soon as we instance the browser.
+  initialize: ->
+    @loadPresentations()
+
+  loadPresentations: ->
+    for presentationId in _.keys localStorage
+      continue if presentationId is 'Settings'
+      @add Presentation.find presentationId
+
+  add: (presentation) ->
+    $template = $ @template presentation
+    $template.append @makeFirstSlideThumb presentation
+    @$el.append $template
+
+  # Creates a "thumbnail" for the first slide in a presentation
+  makeFirstSlideThumb: (presentation) ->
+    slides = presentation.get 'slides'
+    if slides.length isnt 0
+      @make 'div',
+        class: 'slide-thumb',
+        marked slides[0]
 
 # ---
 
@@ -353,11 +386,14 @@ $ ->
   Factory.SlideViewer   = new SlideViewer el: $('.slide-container')
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
+  Factory.Browser       = new PresentationsBrowser el: $('.presentations-browser')
   Factory.Settings      = new Settings
   Factory.Router        = new Router
 
+  # Ensure settings are loaded
   Factory.Settings.fetch()
 
+  # Fix link clicks (see Helpers at the top)
   catchLinkClicks()
 
   Backbone.history.start pushState: true

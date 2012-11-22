@@ -63,6 +63,16 @@ body.theme-default {
       background: rgba(black, .05);
     }
   }
+
+  .presentations-browser {
+    @include box-shadow(0 0 .5rem lighten($text-color, 50%));
+    list-style: none;
+    background-color: darken($background-color, 5%);
+
+    li {
+      @include box-shadow(0 0 .25rem lighten($text-color, 50%));
+    }
+  }
 }
 
 // ---

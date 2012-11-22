@@ -1244,25 +1244,35 @@ body.theme-default .authoring textarea:focus, body.theme-default .authoring text
 body.theme-default .slide pre {
   background: rgba(0, 0, 0, 0.05);
 }
+/* line 67, ../../sass/themes.scss */
+body.theme-default .presentations-browser {
+  -webkit-box-shadow: 0 0 0.5rem #b3b3b3;
+  -moz-box-shadow: 0 0 0.5rem #b3b3b3;
+  box-shadow: 0 0 0.5rem #b3b3b3;
+  list-style: none;
+  background-color: #dde0d8;
+}
+/* line 72, ../../sass/themes.scss */
+body.theme-default .presentations-browser li {
+  -webkit-box-shadow: 0 0 0.25rem #b3b3b3;
+  -moz-box-shadow: 0 0 0.25rem #b3b3b3;
+  box-shadow: 0 0 0.25rem #b3b3b3;
+}
 
 /* line 4, ../../sass/type.scss */
 body, input, select, button, textarea {
   font-family: "PT Sans Narrow", "Helvetica Neue", sans-serif;
 }
 
-/* line 10, ../../sass/type.scss */
+/* line 12, ../../sass/type.scss */
 .authoring menu button, .authoring menu a {
   font-size: 1.2rem;
 }
-/* line 12, ../../sass/type.scss */
+/* line 14, ../../sass/type.scss */
 .authoring textarea {
   font-size: 1rem;
 }
 
-/* line 17, ../../sass/type.scss */
-.slide {
-  margin: 0;
-}
 /* line 20, ../../sass/type.scss */
 .slide h1 {
   margin: 0 0 1.2rem 0;
@@ -1279,65 +1289,90 @@ body, input, select, button, textarea {
   font-size: .8rem;
 }
 
+/* line 37, ../../sass/type.scss */
+.slide-thumb h1 {
+  margin: 0 0 0.3rem 0;
+}
+/* line 41, ../../sass/type.scss */
+.slide-thumb p, .slide-thumb li, .slide-thumb code, .slide-thumb blockquote {
+  margin: 0.3rem 0 0.3rem 0;
+}
+
 /* line 11, ../../sass/factory.scss */
 html, body {
   height: 100%;
   overflow: hidden;
 }
 
-/* line 13, ../../sass/factory.scss */
-.authoring, .slide-container {
+/* line 15, ../../sass/factory.scss */
+.authoring,
+.slide-container,
+.presentations-browser {
   position: absolute;
+}
+
+/* line 17, ../../sass/factory.scss */
+.authoring, .slide-container {
   top: 0;
   bottom: 0;
 }
 
-/* line 19, ../../sass/factory.scss */
+/* line 22, ../../sass/factory.scss */
+.presentations-browser {
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+}
+
+/* line 28, ../../sass/factory.scss */
 .authoring {
   left: 0;
 }
 
-/* line 20, ../../sass/factory.scss */
+/* line 29, ../../sass/factory.scss */
 .slide-container {
   right: 0;
 }
 
-/* line 23, ../../sass/factory.scss */
+/* line 32, ../../sass/factory.scss */
 body.editing .authoring {
   width: 40%;
 }
-/* line 24, ../../sass/factory.scss */
+/* line 33, ../../sass/factory.scss */
 body.editing .slide-container {
   left: 40%;
 }
 
-/* line 32, ../../sass/factory.scss */
+/* line 41, ../../sass/factory.scss */
 .authoring {
   padding-top: 2.4rem;
 }
-/* line 35, ../../sass/factory.scss */
+/* line 44, ../../sass/factory.scss */
 .authoring .writing, .authoring .slides {
   display: none;
 }
-/* line 38, ../../sass/factory.scss */
+/* line 47, ../../sass/factory.scss */
 .authoring .writing.visible, .authoring .slides.visible {
   display: block;
 }
-/* line 41, ../../sass/factory.scss */
+/* line 50, ../../sass/factory.scss */
 .authoring .slides {
   padding: 1.8rem;
 }
-/* line 42, ../../sass/factory.scss */
+/* line 51, ../../sass/factory.scss */
 .authoring .writing {
   padding: 1.2rem;
 }
-/* line 44, ../../sass/factory.scss */
+/* line 53, ../../sass/factory.scss */
 .authoring menu {
   position: absolute;
   top: 0.6rem;
   left: 1.2rem;
 }
-/* line 49, ../../sass/factory.scss */
+/* line 58, ../../sass/factory.scss */
 .authoring menu button, .authoring menu a {
   display: inline-block;
   width: 2rem;
@@ -1347,26 +1382,26 @@ body.editing .slide-container {
   text-decoration: none;
   background: transparent;
 }
-/* line 60, ../../sass/factory.scss */
+/* line 69, ../../sass/factory.scss */
 .authoring .writing {
   height: 100%;
 }
-/* line 63, ../../sass/factory.scss */
+/* line 72, ../../sass/factory.scss */
 .authoring .writing form, .authoring .writing form textarea {
   height: 100%;
   width: 100%;
 }
-/* line 68, ../../sass/factory.scss */
+/* line 77, ../../sass/factory.scss */
 .authoring .writing textarea {
   padding: 0.6rem;
 }
-/* line 73, ../../sass/factory.scss */
+/* line 82, ../../sass/factory.scss */
 .authoring .slides {
   margin: 0;
   min-height: 20%;
   list-style: none;
 }
-/* line 78, ../../sass/factory.scss */
+/* line 87, ../../sass/factory.scss */
 .authoring .slides a {
   display: block;
   margin-top: .5rem;
@@ -1375,21 +1410,21 @@ body.editing .slide-container {
   text-decoration: none;
   cursor: pointer;
 }
-/* line 86, ../../sass/factory.scss */
+/* line 95, ../../sass/factory.scss */
 .authoring .slides a:before {
   margin-right: .25rem;
 }
-/* line 88, ../../sass/factory.scss */
+/* line 97, ../../sass/factory.scss */
 .authoring .slides a .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 100, ../../sass/factory.scss */
+/* line 109, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 103, ../../sass/factory.scss */
+/* line 112, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
@@ -1399,8 +1434,41 @@ body.editing .slide-container {
   top: 50%;
   left: 50%;
   width: 100%;
+  margin: 0;
 }
-/* line 110, ../../sass/factory.scss */
+/* line 120, ../../sass/factory.scss */
 .slide-container .slide pre {
   padding: 0.6rem;
+}
+
+/* line 130, ../../sass/factory.scss */
+.presentations-browser {
+  display: none;
+  width: 75%;
+  height: 75%;
+  margin: 0;
+  padding: 1.2rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+/* line 139, ../../sass/factory.scss */
+.presentations-browser li {
+  position: relative;
+  display: inline-block;
+  margin: 0 0.9rem 0.6rem 0;
+  width: 7rem;
+  height: 6rem;
+  overflow: hidden;
+}
+/* line 147, ../../sass/factory.scss */
+.presentations-browser li .slide-thumb {
+  -webkit-transform: translate(-50%, -60%);
+  -moz-transform: translate(-50%, -60%);
+  -ms-transform: translate(-50%, -60%);
+  transform: translate(-50%, -60%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  margin: 0 0.3rem 0 0.3rem;
 }

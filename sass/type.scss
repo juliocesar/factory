@@ -5,6 +5,8 @@ body, input, select, button, textarea {
   font-family: 'PT Sans Narrow', 'Helvetica Neue', sans-serif
 }
 
+$standard-measure-unit: 0.6rem;
+
 .authoring {
   menu {
     button, a { font-size: 1.2rem }
@@ -15,20 +17,28 @@ body, input, select, button, textarea {
 }
 
 .slide {
-  margin: 0;
-
   h1 {
-    margin: 0 0 1.2rem 0;
+    margin: 0 0 $standard-measure-unit*2 0;
     font-size: 3.4rem;
   }
 
   p, li, code, blockquote {
-    margin: 1.2rem 0 1.2rem 0;
+    margin: $standard-measure-unit*2 0 $standard-measure-unit*2 0;
     font-size: 1.6rem;
   }
 
   code {
     font-family: Monaco, sans-serif;
     font-size: .8rem;
+  }
+}
+
+.slide-thumb {
+  h1 {
+    margin: 0 0 $standard-measure-unit/2 0;
+  }
+
+  p, li, code, blockquote {
+    margin: $standard-measure-unit/2 0 $standard-measure-unit/2 0;
   }
 }
