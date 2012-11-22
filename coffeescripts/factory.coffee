@@ -12,6 +12,8 @@ window.Factory =
     Factory.Editor.open presentation.slideAt slideNumber
     Factory.SlideViewer.createSlide presentation.slideAt slideNumber
     Factory.SlidesBrowser.loadSlides presentation.get 'slides'
+    Factory.Settings.save
+      editing: { id: presentation.id, slideNumber: slideNumber }
 
   # Bind a presentation to the components
   _bindComponents: (presentation) ->
@@ -67,13 +69,13 @@ localStorageSync = (method, model, rest...) ->
   switch method
     when 'create', 'update'
       localStorage.setItem @id, JSON.stringify model
+      model.trigger 'change'
     when 'delete'
       localStorage.removeItem @id
     when 'read'
       attributes = localStorage.getItem @id
       model.attributes = JSON.parse attributes if attributes?
       model.trigger 'reset'
-  model.trigger 'change'
   @
 
 # ---
@@ -249,7 +251,7 @@ class MainMenu extends Backbone.View
 # ---
 
 # The presentation model. We won't need a collection for these
-# as we'll be using localStorage for that.
+# as we'll be using localStorage for that
 class Presentation extends Backbone.Model
 
   # Class method to grab a presentation from localStorage
@@ -293,6 +295,18 @@ class Presentation extends Backbone.Model
 
 # ---
 
+# App settings, including some handy variables such as what
+# presentation where we looking at last
+class Settings extends Backbone.Model
+
+  # Always find it in localStorage['Settings']
+  id: 'Settings'
+
+  # Keep settings in localStorage
+  sync: localStorageSync
+
+# ---
+
 # Sadly, this since is a self-contained client-side app, we'll
 # need Backbone.Router
 class Router extends Backbone.Router
@@ -303,8 +317,14 @@ class Router extends Backbone.Router
     ':id'        : 'open'
     ':id/:slide' : 'open'
 
+  # Get the last presentating the user is editing and
   home: ->
-    @navigate '/new', true
+    editing = Factory.Settings.attributes.editing
+    if editing?
+      presentation = Presentation.find editing.id
+      @navigate presentation.url editing.slideNumber, true
+    else
+      @navigate '/new', true
 
   # Opens a presentation. If a slide number is provided, jump
   # to it
@@ -325,7 +345,10 @@ $ ->
   Factory.SlideViewer   = new SlideViewer el: $('.slide-container')
   Factory.SlidesBrowser = new SlidesBrowser el: $('.authoring .slides')
   Factory.MainMenu      = new MainMenu el: $('.authoring menu')
+  Factory.Settings      = new Settings
   Factory.Router        = new Router
+
+  Factory.Settings.fetch()
 
   catchLinkClicks()
 
