@@ -271,7 +271,12 @@
     MainMenu.prototype.events = {
       'click .show-slides': 'toggleSlides',
       'click .new-slide': 'createNewSlide',
-      'click .delete-presentation': 'deletePresentation'
+      'click .delete-presentation': 'deletePresentation',
+      'click .browse-presentations': 'togglePresentationsBrowser'
+    };
+
+    MainMenu.prototype.initialize = function() {
+      return $('.overlay').click(this.togglePresentationsBrowser);
     };
 
     MainMenu.prototype.toggleSlides = function() {
@@ -297,6 +302,11 @@
         Factory.currentPresentation.destroy();
         return Factory.Router.navigate('/new', true);
       }
+    };
+
+    MainMenu.prototype.togglePresentationsBrowser = function() {
+      $('body').toggleClass('far');
+      return $('.overlay').toggle();
     };
 
     return MainMenu;

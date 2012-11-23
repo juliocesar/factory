@@ -228,9 +228,14 @@ class SlidesBrowser extends Backbone.View
 class MainMenu extends Backbone.View
 
   events:
-    'click .show-slides'         : 'toggleSlides'
-    'click .new-slide'           : 'createNewSlide'
-    'click .delete-presentation' : 'deletePresentation'
+    'click .show-slides'          : 'toggleSlides'
+    'click .new-slide'            : 'createNewSlide'
+    'click .delete-presentation'  : 'deletePresentation'
+    'click .browse-presentations' : 'togglePresentationsBrowser'
+
+  initialize: ->
+    # We'll step out of our element for the sake of relevance
+    $('.overlay').click @togglePresentationsBrowser
 
   # Controls whether the show/hide slides button has/hasn't
   # a "section-visible" class, and gets Factory to fire slides:toggle
@@ -254,6 +259,10 @@ class MainMenu extends Backbone.View
     if confirm "Delete this presentation?"
       Factory.currentPresentation.destroy()
       Factory.Router.navigate '/new', true
+
+  togglePresentationsBrowser: ->
+    $('body').toggleClass 'far'
+    $('.overlay').toggle()
 
 # ---
 
