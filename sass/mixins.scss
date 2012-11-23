@@ -14,3 +14,31 @@
   -ms-transform: translate($x, $y);
   transform: translate($x, $y)
 }
+
+@mixin transform-origin($x, $y) {
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  transform-origin: 50% 50%
+}
+
+@mixin scale($ratio) {
+  -webkit-transform: scale($ratio);
+  -moz-transform: scale($ratio);
+  -ms-transform: scale($ratio);
+  transform: scale($ratio)
+}
+
+@mixin vendor-transform($transform) {
+  -webkit-transform: $transform;
+  -moz-transform: $transform;
+  -ms-transform: $transform;
+  transform: $transform
+}
+
+@mixin vendor-filter($filter) {
+  -webkit-filter: $filter;
+  -moz-filter: $filter;
+  -ms-filter: $filter;
+  filter: $filter
+}
