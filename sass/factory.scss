@@ -6,7 +6,7 @@
 
 // Structure
 
-$page-padding: .6rem;
+$standard-spacing: .6rem;
 
 html, body { height: 100%; overflow: hidden }
 
@@ -22,10 +22,14 @@ html, body { height: 100%; overflow: hidden }
 .presentations-browser {
   @include translate(-50%, -50%);
   top: 50%;
-  left: 50%
+  left: 50%;
+  z-index: 100;
 }
 
-.authoring       { left: 0 }
+.authoring {
+  height: 100%;
+  left: 0
+}
 .slide-container { right: 0 }
 
 body.editing {
@@ -39,7 +43,7 @@ body.editing {
 // Authoring
 
 .authoring {
-  padding-top: $page-padding*4;
+  padding-top: $standard-spacing*4;
 
   .writing, .slides {
     display: none;
@@ -47,13 +51,13 @@ body.editing {
     &.visible { display: block }
   }
 
-  .slides { padding: $page-padding*3 }
-  .writing { padding: $page-padding*2 }
+  .slides { padding: $standard-spacing*3 }
+  .writing { padding: $standard-spacing*2 }
 
   menu {
     position: absolute;
-    top: $page-padding;
-    left: $page-padding*2;
+    top: $standard-spacing;
+    left: $standard-spacing*2;
 
     button, a {
       display: inline-block;
@@ -75,7 +79,7 @@ body.editing {
     }
 
     textarea {
-      padding: $page-padding;
+      padding: $standard-spacing;
     }
   }
 
@@ -107,7 +111,7 @@ body.editing {
 // Slide container
 
 .slide-container {
-  margin: 0 $page-padding*2 0 $page-padding*2;
+  margin: 0 $standard-spacing*2 0 $standard-spacing*2;
 
   .slide {
     @include translate(-50%, -75%);
@@ -118,7 +122,7 @@ body.editing {
     margin: 0;
 
     pre {
-      padding: $page-padding
+      padding: $standard-spacing
     }
   }
 }
@@ -128,18 +132,18 @@ body.editing {
 // Presentations browser
 
 .presentations-browser {
-  display: none;
+  // display: none;
   width: 75%;
   height: 75%;
   margin: 0;
-  padding: $page-padding*2;
+  padding: $standard-spacing*2;
   overflow-x: hidden;
   overflow-y: auto;
 
   li {
     position: relative;
     display: inline-block;
-    margin: 0 $page-padding*1.5 $page-padding 0;
+    margin: 0 $standard-spacing*1.5 $standard-spacing 0;
     width: 7rem;
     height: 6rem;
     overflow: hidden;
@@ -150,7 +154,7 @@ body.editing {
       top: 50%;
       left: 50%;
       width: 100%;
-      margin: 0 $page-padding/2 0 $page-padding/2;
+      margin: 0 $standard-spacing/2 0 $standard-spacing/2;
     }
   }
 }

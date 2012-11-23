@@ -4,8 +4,48 @@
 // Themes are activated by adding their coresponding class to the
 // <body>.
 
+// Depth of view effect for when showing the presentations browser
+@import 'mixins';
+
+body {
+  @include transition(all, 0.25s, linear);
+  @include transform-origin(50%, 50%);
+
+  .presentations-browser {
+    @include transition(all, 0.25s, linear);
+    @include vendor-transform(scale(.9) translate(-50%, -50%));
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.far {
+    .authoring, .slide-container {
+      @include vendor-filter(blur(1px))
+    }
+
+    .presentations-browser {
+      @include vendor-transform(scale(1) translate(-50%, -50%));
+      opacity: 1;
+      pointer-events: auto
+    }
+  }
+}
+
+.overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(black, .5);
+  z-index: 99
+}
+
+
 // Default
 @import 'compass/css3/box-shadow';
+
 body.theme-default {
   $background-color: #e9ebe6;
   $text-color: #333;

@@ -1181,19 +1181,72 @@ menu {
   margin: 0;
 }
 
-/* line 9, ../../sass/themes.scss */
+/* line 10, ../../sass/themes.scss */
+body {
+  -webkit-transition: all 0.25s linear;
+  -moz-transition: all 0.25s linear;
+  -ms-transition: all 0.25s linear;
+  transition: all 0.25s linear;
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+}
+/* line 14, ../../sass/themes.scss */
+body .presentations-browser {
+  -webkit-transition: all 0.25s linear;
+  -moz-transition: all 0.25s linear;
+  -ms-transition: all 0.25s linear;
+  transition: all 0.25s linear;
+  -webkit-transform: scale(0.9) translate(-50%, -50%);
+  -moz-transform: scale(0.9) translate(-50%, -50%);
+  -ms-transform: scale(0.9) translate(-50%, -50%);
+  transform: scale(0.9) translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+/* line 22, ../../sass/themes.scss */
+body.far .authoring, body.far .slide-container {
+  -webkit-filter: blur(1px);
+  -moz-filter: blur(1px);
+  -ms-filter: blur(1px);
+  filter: blur(1px);
+}
+/* line 26, ../../sass/themes.scss */
+body.far .presentations-browser {
+  -webkit-transform: scale(1) translate(-50%, -50%);
+  -moz-transform: scale(1) translate(-50%, -50%);
+  -ms-transform: scale(1) translate(-50%, -50%);
+  transform: scale(1) translate(-50%, -50%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* line 34, ../../sass/themes.scss */
+.overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+/* line 49, ../../sass/themes.scss */
 body.theme-default {
   background-color: #e9ebe6;
   color: #333333;
 }
-/* line 16, ../../sass/themes.scss */
+/* line 56, ../../sass/themes.scss */
 body.theme-default .authoring {
   -webkit-box-shadow: inset -0.1rem 0 0.5rem #b3b3b3;
   -moz-box-shadow: inset -0.1rem 0 0.5rem #b3b3b3;
   box-shadow: inset -0.1rem 0 0.5rem #b3b3b3;
   background-color: #dde0d8;
 }
-/* line 21, ../../sass/themes.scss */
+/* line 61, ../../sass/themes.scss */
 body.theme-default .authoring menu button, body.theme-default .authoring menu a {
   -webkit-transition: color 0.25s linear;
   -moz-transition: color 0.25s linear;
@@ -1201,32 +1254,32 @@ body.theme-default .authoring menu button, body.theme-default .authoring menu a 
   transition: color 0.25s linear;
   color: rgba(51, 51, 51, 0.6);
 }
-/* line 25, ../../sass/themes.scss */
+/* line 65, ../../sass/themes.scss */
 body.theme-default .authoring menu button:hover, body.theme-default .authoring menu button.section-visible, body.theme-default .authoring menu a:hover, body.theme-default .authoring menu a.section-visible {
   color: #333333;
 }
-/* line 31, ../../sass/themes.scss */
+/* line 71, ../../sass/themes.scss */
 body.theme-default .authoring .slides {
   border-bottom: 1px dashed #333333;
 }
-/* line 34, ../../sass/themes.scss */
+/* line 74, ../../sass/themes.scss */
 body.theme-default .authoring .slides a {
   -webkit-transition: background 0.25s linear;
   -moz-transition: background 0.25s linear;
   -ms-transition: background 0.25s linear;
   transition: background 0.25s linear;
 }
-/* line 37, ../../sass/themes.scss */
+/* line 77, ../../sass/themes.scss */
 body.theme-default .authoring .slides a:hover {
   background: rgba(0, 0, 0, 0.05);
 }
-/* line 42, ../../sass/themes.scss */
+/* line 82, ../../sass/themes.scss */
 body.theme-default .authoring .slides .delete {
   background-color: transparent;
   color: #333333;
   border: 0;
 }
-/* line 49, ../../sass/themes.scss */
+/* line 89, ../../sass/themes.scss */
 body.theme-default .authoring textarea {
   -webkit-transition: background 0.25s linear;
   -moz-transition: background 0.25s linear;
@@ -1236,15 +1289,15 @@ body.theme-default .authoring textarea {
   background: transparent;
   color: #262626;
 }
-/* line 55, ../../sass/themes.scss */
+/* line 95, ../../sass/themes.scss */
 body.theme-default .authoring textarea:focus, body.theme-default .authoring textarea:hover {
   background: rgba(0, 0, 0, 0.05);
 }
-/* line 62, ../../sass/themes.scss */
+/* line 102, ../../sass/themes.scss */
 body.theme-default .slide pre {
   background: rgba(0, 0, 0, 0.05);
 }
-/* line 67, ../../sass/themes.scss */
+/* line 107, ../../sass/themes.scss */
 body.theme-default .presentations-browser {
   -webkit-box-shadow: 0 0 0.5rem #b3b3b3;
   -moz-box-shadow: 0 0 0.5rem #b3b3b3;
@@ -1252,7 +1305,7 @@ body.theme-default .presentations-browser {
   list-style: none;
   background-color: #dde0d8;
 }
-/* line 72, ../../sass/themes.scss */
+/* line 112, ../../sass/themes.scss */
 body.theme-default .presentations-browser li {
   -webkit-box-shadow: 0 0 0.25rem #b3b3b3;
   -moz-box-shadow: 0 0 0.25rem #b3b3b3;
@@ -1325,54 +1378,56 @@ html, body {
   transform: translate(-50%, -50%);
   top: 50%;
   left: 50%;
-}
-
-/* line 28, ../../sass/factory.scss */
-.authoring {
-  left: 0;
+  z-index: 100;
 }
 
 /* line 29, ../../sass/factory.scss */
+.authoring {
+  height: 100%;
+  left: 0;
+}
+
+/* line 33, ../../sass/factory.scss */
 .slide-container {
   right: 0;
 }
 
-/* line 32, ../../sass/factory.scss */
+/* line 36, ../../sass/factory.scss */
 body.editing .authoring {
   width: 40%;
 }
-/* line 33, ../../sass/factory.scss */
+/* line 37, ../../sass/factory.scss */
 body.editing .slide-container {
   left: 40%;
 }
 
-/* line 41, ../../sass/factory.scss */
+/* line 45, ../../sass/factory.scss */
 .authoring {
   padding-top: 2.4rem;
 }
-/* line 44, ../../sass/factory.scss */
+/* line 48, ../../sass/factory.scss */
 .authoring .writing, .authoring .slides {
   display: none;
 }
-/* line 47, ../../sass/factory.scss */
+/* line 51, ../../sass/factory.scss */
 .authoring .writing.visible, .authoring .slides.visible {
   display: block;
 }
-/* line 50, ../../sass/factory.scss */
+/* line 54, ../../sass/factory.scss */
 .authoring .slides {
   padding: 1.8rem;
 }
-/* line 51, ../../sass/factory.scss */
+/* line 55, ../../sass/factory.scss */
 .authoring .writing {
   padding: 1.2rem;
 }
-/* line 53, ../../sass/factory.scss */
+/* line 57, ../../sass/factory.scss */
 .authoring menu {
   position: absolute;
   top: 0.6rem;
   left: 1.2rem;
 }
-/* line 58, ../../sass/factory.scss */
+/* line 62, ../../sass/factory.scss */
 .authoring menu button, .authoring menu a {
   display: inline-block;
   width: 2rem;
@@ -1382,26 +1437,26 @@ body.editing .slide-container {
   text-decoration: none;
   background: transparent;
 }
-/* line 69, ../../sass/factory.scss */
+/* line 73, ../../sass/factory.scss */
 .authoring .writing {
   height: 100%;
 }
-/* line 72, ../../sass/factory.scss */
+/* line 76, ../../sass/factory.scss */
 .authoring .writing form, .authoring .writing form textarea {
   height: 100%;
   width: 100%;
 }
-/* line 77, ../../sass/factory.scss */
+/* line 81, ../../sass/factory.scss */
 .authoring .writing textarea {
   padding: 0.6rem;
 }
-/* line 82, ../../sass/factory.scss */
+/* line 86, ../../sass/factory.scss */
 .authoring .slides {
   margin: 0;
   min-height: 20%;
   list-style: none;
 }
-/* line 87, ../../sass/factory.scss */
+/* line 91, ../../sass/factory.scss */
 .authoring .slides a {
   display: block;
   margin-top: .5rem;
@@ -1410,21 +1465,21 @@ body.editing .slide-container {
   text-decoration: none;
   cursor: pointer;
 }
-/* line 95, ../../sass/factory.scss */
+/* line 99, ../../sass/factory.scss */
 .authoring .slides a:before {
   margin-right: .25rem;
 }
-/* line 97, ../../sass/factory.scss */
+/* line 101, ../../sass/factory.scss */
 .authoring .slides a .delete {
   float: right;
   font-size: 1rem;
 }
 
-/* line 109, ../../sass/factory.scss */
+/* line 113, ../../sass/factory.scss */
 .slide-container {
   margin: 0 1.2rem 0 1.2rem;
 }
-/* line 112, ../../sass/factory.scss */
+/* line 116, ../../sass/factory.scss */
 .slide-container .slide {
   -webkit-transform: translate(-50%, -75%);
   -moz-transform: translate(-50%, -75%);
@@ -1436,14 +1491,13 @@ body.editing .slide-container {
   width: 100%;
   margin: 0;
 }
-/* line 120, ../../sass/factory.scss */
+/* line 124, ../../sass/factory.scss */
 .slide-container .slide pre {
   padding: 0.6rem;
 }
 
-/* line 130, ../../sass/factory.scss */
+/* line 134, ../../sass/factory.scss */
 .presentations-browser {
-  display: none;
   width: 75%;
   height: 75%;
   margin: 0;
@@ -1451,7 +1505,7 @@ body.editing .slide-container {
   overflow-x: hidden;
   overflow-y: auto;
 }
-/* line 139, ../../sass/factory.scss */
+/* line 143, ../../sass/factory.scss */
 .presentations-browser li {
   position: relative;
   display: inline-block;
@@ -1460,7 +1514,7 @@ body.editing .slide-container {
   height: 6rem;
   overflow: hidden;
 }
-/* line 147, ../../sass/factory.scss */
+/* line 151, ../../sass/factory.scss */
 .presentations-browser li .slide-thumb {
   -webkit-transform: translate(-50%, -60%);
   -moz-transform: translate(-50%, -60%);
