@@ -105,7 +105,7 @@ body.theme-default {
   }
 
   .presentations-browser {
-    @include box-shadow(0 0 .5rem lighten($text-color, 50%));
+    @include box-shadow(0 0 .5rem lighten($text-color, 20%));
     list-style: none;
     background-color: darken($background-color, 5%);
 
