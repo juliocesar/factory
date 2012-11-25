@@ -189,13 +189,6 @@
 
     SlidesBrowser.prototype.template = _.template("<a href=\"<%= url %>\" class=\"icon-star\">\n  <%= summary %>\n  <button class=\"delete icon-trash\"></button>\n</a>");
 
-    SlidesBrowser.prototype.initialize = function() {
-      var _this = this;
-      return Factory.on('slides:toggle', function(showOrHide) {
-        return _this.toggleVisible(showOrHide);
-      });
-    };
-
     SlidesBrowser.prototype.addSlide = function(markdown) {
       var $a, index;
       index = this.$el.find('a').length;
@@ -238,11 +231,11 @@
       return _results;
     };
 
-    SlidesBrowser.prototype.toggleVisible = function(showOrHide) {
-      if (showOrHide === 'show') {
-        return this.$el.fadeIn(250);
-      } else if ('hide') {
+    SlidesBrowser.prototype.toggleVisible = function() {
+      if (this.$el.is(':visible')) {
         return this.$el.fadeOut(100);
+      } else {
+        return this.$el.fadeIn(150);
       }
     };
 
@@ -282,13 +275,8 @@
     MainMenu.prototype.toggleSlides = function() {
       var $button;
       $button = $(event.target);
-      if ($button.hasClass('section-visible')) {
-        $button.toggleClass('section-visible', false);
-        return Factory.trigger('slides:toggle', 'hide');
-      } else {
-        $button.toggleClass('section-visible', true);
-        return Factory.trigger('slides:toggle', 'show');
-      }
+      $button.toggleClass('section-visible');
+      return Factory.SlidesBrowser.toggleVisible();
     };
 
     MainMenu.prototype.createNewSlide = function() {

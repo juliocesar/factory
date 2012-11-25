@@ -107,10 +107,11 @@ class Editor extends Backbone.View
       return if event.keyCode in @keysBlacklist
       Factory.SlideViewer.updateSlide @$el.val()
       @_debouncedSave()
+    # TAB needs to be trapped on keydown
     @$el.on 'keydown', (event) =>
-      if event.keyCode is 9
+      if event.keyCode is 9 #
         event.preventDefault()
-        return @addTab event.target
+        @addTab event.target
 
   # Adds a tab where the cursor is when TAB is pressed.
   addTab: (textarea) ->
@@ -154,7 +155,6 @@ class SlideViewer extends Backbone.View
 class SlidesBrowser extends Backbone.View
 
   events:
-    # 'click a': 'open'
     'click a button': 'clickDelete'
 
   # Slide entry template
@@ -164,10 +164,6 @@ class SlidesBrowser extends Backbone.View
       <button class="delete icon-trash"></button>
     </a>
   """
-
-  initialize: ->
-    Factory.on 'slides:toggle', (showOrHide) =>
-      @toggleVisible showOrHide
 
   # Adds a slide to the list of slides
   addSlide: (markdown) ->
@@ -204,13 +200,12 @@ class SlidesBrowser extends Backbone.View
     @$el.empty()
     @addSlide slide for slide in slides
 
-  # Shows or hides the slides list. Pass 'show' to show,
-  # or 'hide' to hide
-  toggleVisible: (showOrHide) ->
-    if showOrHide is 'show'
-      @$el.fadeIn 250
-    else if 'hide'
+  # Toggles the slides list visibility
+  toggleVisible: ->
+    if @$el.is ':visible'
       @$el.fadeOut 100
+    else
+      @$el.fadeIn 150
 
   # Grabs some text from a slide's compiled markdown
   # so @addSlide can show a preview
@@ -241,12 +236,8 @@ class MainMenu extends Backbone.View
   # a "section-visible" class, and gets Factory to fire slides:toggle
   toggleSlides: ->
     $button = $ event.target
-    if $button.hasClass 'section-visible'
-      $button.toggleClass 'section-visible', no
-      Factory.trigger 'slides:toggle', 'hide'
-    else
-      $button.toggleClass 'section-visible', yes
-      Factory.trigger 'slides:toggle', 'show'
+    $button.toggleClass 'section-visible'
+    Factory.SlidesBrowser.toggleVisible()
 
   # Creates a new slide by calling addSlide() on a Presentation
   # instance
