@@ -36,9 +36,14 @@
       </a>
     </script>
     <script type="template" id="presentations-browser-entry">
-      <li data-presentation-link="<%= url() %>"></li>
+      <li data-presentation-id="<%= id %>">
+        <div class="preview"></div>
+        <h1 class="title"><%= title() %></h1>
+        <p class="created"><%= prettyCreationDate() %></p>
+      </li>
     </script>
     <script src="/javascripts/jquery-1.8.2.min.js"></script>
+    <script src="/javascripts/moment.min.js"></script>
     <script src="/javascripts/marked.js"></script>
     <script src="/javascripts/underscore.js"></script>
     <script src="/javascripts/backbone.js"></script>
