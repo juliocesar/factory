@@ -36,9 +36,9 @@ window.Factory =
     slides = @currentPresentation.get('slides')
     slides[@currentSlide] = Factory.Editor.$el.val()
     @currentPresentation.save 'slides': slides
-
-# Make it the components events hub
-_.extend Factory, Backbone.Events
+    # localStorage events won't fire in the same window, so for now
+    # there's no other way
+    Factory.Browser.loadPresentations()
 
 DEFAULT_SLIDE = """
   # Introducing Factory
@@ -312,7 +312,6 @@ class Presentation extends Backbone.Model
 
 # The presentations browser, so you can navigate all the presentations
 # kept in localStorage
-
 class PresentationsBrowser extends Backbone.View
 
   events:
@@ -326,8 +325,9 @@ class PresentationsBrowser extends Backbone.View
     @loadPresentations()
 
   # Loads all presentations that exist in localStorage onto the
-  # presentations browser
+  # presentations browser, clearing any existing ones from display
   loadPresentations: ->
+    @$el.empty()
     for presentationId in _.keys localStorage
       continue if presentationId is 'Settings'
       @add Presentation.find presentationId

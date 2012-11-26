@@ -42,13 +42,12 @@
       var slides;
       slides = this.currentPresentation.get('slides');
       slides[this.currentSlide] = Factory.Editor.$el.val();
-      return this.currentPresentation.save({
+      this.currentPresentation.save({
         'slides': slides
       });
+      return Factory.Browser.loadPresentations();
     }
   };
-
-  _.extend(Factory, Backbone.Events);
 
   DEFAULT_SLIDE = "# Introducing Factory\n\nFactory is an in-browser slide creation and\npublishing tool.\n\nNo server setup required. Slides are served straight from\nyour browser.";
 
@@ -402,6 +401,7 @@
 
     PresentationsBrowser.prototype.loadPresentations = function() {
       var presentationId, _i, _len, _ref, _results;
+      this.$el.empty();
       _ref = _.keys(localStorage);
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

@@ -42,3 +42,23 @@ $standard-measure-unit: 0.6rem;
     margin: $standard-measure-unit/2 0 $standard-measure-unit/2 0;
   }
 }
+
+.slides {
+  a {
+    font-size: 1rem;
+
+    .deleted {
+      font-size: 1rem
+    }
+  }
+}
+
+.presentations-browser {
+  .preview {
+    h1 { font-size: 1rem }
+    p, li, code { font-size: 0.5rem }
+  }
+
+  .title    { font-size: 1.6rem }
+  .created  { font-size: 1.1rem }
+}
