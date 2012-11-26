@@ -1498,23 +1498,20 @@ body.editing .slide-container {
 
 /* line 134, ../../sass/factory.scss */
 .presentations-browser {
-  width: 75%;
+  width: 26rem;
   height: 75%;
   margin: 0;
   padding: 1.2rem;
   overflow-x: hidden;
   overflow-y: auto;
 }
-/* line 143, ../../sass/factory.scss */
+/* line 142, ../../sass/factory.scss */
 .presentations-browser li {
   position: relative;
-  display: inline-block;
   margin: 0 0.9rem 0.6rem 0;
-  width: 7rem;
-  height: 6rem;
-  overflow: hidden;
+  cursor: pointer;
 }
-/* line 151, ../../sass/factory.scss */
+/* line 147, ../../sass/factory.scss */
 .presentations-browser li .slide-thumb {
   -webkit-transform: translate(-50%, -60%);
   -moz-transform: translate(-50%, -60%);
@@ -1524,5 +1521,6 @@ body.editing .slide-container {
   top: 50%;
   left: 50%;
   width: 100%;
+  height: 6rem;
   margin: 0 0.3rem 0 0.3rem;
 }

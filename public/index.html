@@ -29,6 +29,15 @@
     <div class="overlay"></div>
     <div class="presentations-browser"></div>
     <section class="slide-container"></section>
+    <script type="template" id="slides-browser-entry">
+      <a href="<%= url %>" class="icon-star">
+        <%= summary %>
+        <button class="delete icon-trash"></button>
+      </a>
+    </script>
+    <script type="template" id="presentations-browser-entry">
+      <li data-presentation-link="<%= url() %>"></li>
+    </script>
     <script src="/javascripts/jquery-1.8.2.min.js"></script>
     <script src="/javascripts/marked.js"></script>
     <script src="/javascripts/underscore.js"></script>

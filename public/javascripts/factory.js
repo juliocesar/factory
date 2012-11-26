@@ -187,7 +187,7 @@
       'click a button': 'clickDelete'
     };
 
-    SlidesBrowser.prototype.template = _.template("<a href=\"<%= url %>\" class=\"icon-star\">\n  <%= summary %>\n  <button class=\"delete icon-trash\"></button>\n</a>");
+    SlidesBrowser.prototype.template = _.template($('#slides-browser-entry').html());
 
     SlidesBrowser.prototype.addSlide = function(markdown) {
       var $a, index;
@@ -325,7 +325,8 @@
     Presentation.prototype.initialize = function() {
       if (this.isNew()) {
         this.set({
-          'id': this.makeUniqueId()
+          'id': this.makeUniqueId(),
+          created: new Date
         });
         return this.addSlide(DEFAULT_SLIDE);
       }
@@ -375,7 +376,7 @@
       return PresentationsBrowser.__super__.constructor.apply(this, arguments);
     }
 
-    PresentationsBrowser.prototype.template = _.template("<li data-presentation-link=\"<%= url() %>\"></li>");
+    PresentationsBrowser.prototype.template = _.template($('#presentations-browser-entry').html());
 
     PresentationsBrowser.prototype.initialize = function() {
       return this.loadPresentations();

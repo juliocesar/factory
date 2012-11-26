@@ -24,7 +24,7 @@ window.Factory =
   _unbindComponents: (presentation) ->
     presentation.off()
 
-  # Sets the current presentation and slide
+  # Sets the current presentation and slide number
   _setCurrent: (presentation, slideNumber) ->
     @currentPresentation = presentation
     @currentSlide = slideNumber
@@ -158,12 +158,7 @@ class SlidesBrowser extends Backbone.View
     'click a button': 'clickDelete'
 
   # Slide entry template
-  template: _.template """
-    <a href="<%= url %>" class="icon-star">
-      <%= summary %>
-      <button class="delete icon-trash"></button>
-    </a>
-  """
+  template: _.template $('#slides-browser-entry').html()
 
   # Adds a slide to the list of slides
   addSlide: (markdown) ->
@@ -273,7 +268,7 @@ class Presentation extends Backbone.Model
 
   initialize: ->
     if @isNew()
-      @set 'id': @makeUniqueId()
+      @set 'id': @makeUniqueId(), created: new Date
       @addSlide DEFAULT_SLIDE
 
   # Makes something less long than a UUID
@@ -307,9 +302,7 @@ class Presentation extends Backbone.Model
 
 class PresentationsBrowser extends Backbone.View
 
-  template: _.template """
-    <li data-presentation-link="<%= url() %>"></li>
-  """
+  template: _.template $('#presentations-browser-entry').html()
 
   # Since localStorage is ready as soon as the browser opens, it's
   # safe to load what's in it as soon as we instance the browser.
