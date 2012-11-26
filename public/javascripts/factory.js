@@ -293,8 +293,7 @@
     };
 
     MainMenu.prototype.togglePresentationsBrowser = function() {
-      $('body').toggleClass('far');
-      return $('.overlay').toggle();
+      return Factory.Browser.toggleVisible();
     };
 
     return MainMenu;
@@ -364,6 +363,21 @@
       return url;
     };
 
+    Presentation.prototype.title = function() {
+      var $placeholder;
+      if (this.get('slides').length !== 0) {
+        $placeholder = $('<div></div>').html(marked(this.get('slides')[0]));
+        return $placeholder.find('*:first').text();
+      }
+    };
+
+    Presentation.prototype.prettyCreationDate = function() {
+      var createdAt;
+      if (createdAt = new Date(this.get('created'))) {
+        return moment(createdAt).format("MMMM Do YYYY, h:mm:ssa");
+      }
+    };
+
     return Presentation;
 
   })(Backbone.Model);
@@ -375,6 +389,10 @@
     function PresentationsBrowser() {
       return PresentationsBrowser.__super__.constructor.apply(this, arguments);
     }
+
+    PresentationsBrowser.prototype.events = {
+      'click li': 'clickOpen'
+    };
 
     PresentationsBrowser.prototype.template = _.template($('#presentations-browser-entry').html());
 
@@ -399,8 +417,17 @@
     PresentationsBrowser.prototype.add = function(presentation) {
       var $template;
       $template = $(this.template(presentation));
-      $template.append(this.makeFirstSlideThumb(presentation));
+      $template.find('.preview').append(this.makeFirstSlideThumb(presentation));
       return this.$el.append($template);
+    };
+
+    PresentationsBrowser.prototype.clickOpen = function(event) {
+      var $li, presentation;
+      $li = $(event.target).closest('li');
+      if (presentation = Presentation.find($li.data('presentation-id'))) {
+        this.toggleVisible();
+        return Factory.Router.navigate(presentation.url(), true);
+      }
     };
 
     PresentationsBrowser.prototype.makeFirstSlideThumb = function(presentation) {
@@ -411,6 +438,11 @@
           "class": 'slide-thumb'
         }, marked(slides[0]));
       }
+    };
+
+    PresentationsBrowser.prototype.toggleVisible = function() {
+      $('body').toggleClass('far');
+      return $('.overlay').toggle();
     };
 
     return PresentationsBrowser;

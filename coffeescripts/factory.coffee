@@ -4,7 +4,8 @@
 # Keep a global reference around, as well as some app-wide methods.
 window.Factory =
 
-  # Opens a presentation object.
+  # Opens a presentation object. You can open at a slide directly
+  # by passing a number to it
   open: (presentation, slideNumber = 0) ->
     @_unbindComponents @currentPresentation if @currentPresentation?
     @_setCurrent presentation, slideNumber
@@ -246,9 +247,9 @@ class MainMenu extends Backbone.View
       Factory.currentPresentation.destroy()
       Factory.Router.navigate '/new', true
 
+  # Shows/hides the presentation browser
   togglePresentationsBrowser: ->
-    $('body').toggleClass 'far'
-    $('.overlay').toggle()
+    Factory.Browser.toggleVisible()
 
 # ---
 
@@ -295,12 +296,27 @@ class Presentation extends Backbone.Model
     url += "/#{slideNumber}" if slideNumber?
     url
 
+  # Returns a "title" for the presentation, assuming the first thing
+  # you mentioned is something that could be used as such
+  title: ->
+    if @get('slides').length isnt 0
+      $placeholder = $('<div></div>').html marked @get('slides')[0]
+      $placeholder.find('*:first').text()
+
+  # Returns the presentation's creation date in human readable form
+  prettyCreationDate: ->
+    if createdAt = new Date @get('created')
+      moment(createdAt).format("MMMM Do YYYY, h:mm:ssa")
+
 # ---
 
 # The presentations browser, so you can navigate all the presentations
 # kept in localStorage
 
 class PresentationsBrowser extends Backbone.View
+
+  events:
+    'click li' : 'clickOpen'
 
   template: _.template $('#presentations-browser-entry').html()
 
@@ -309,15 +325,26 @@ class PresentationsBrowser extends Backbone.View
   initialize: ->
     @loadPresentations()
 
+  # Loads all presentations that exist in localStorage onto the
+  # presentations browser
   loadPresentations: ->
     for presentationId in _.keys localStorage
       continue if presentationId is 'Settings'
       @add Presentation.find presentationId
 
+  # Adds a single presentation model instance to the presentations
+  # browser
   add: (presentation) ->
     $template = $ @template presentation
-    $template.append @makeFirstSlideThumb presentation
+    $template.find('.preview').append @makeFirstSlideThumb presentation
     @$el.append $template
+
+  # Opens a presentation, hiding the presentations browser in the process
+  clickOpen: (event) ->
+    $li = $(event.target).closest 'li'
+    if presentation = Presentation.find $li.data('presentation-id')
+      @toggleVisible()
+      Factory.Router.navigate presentation.url(), true
 
   # Creates a "thumbnail" for the first slide in a presentation
   makeFirstSlideThumb: (presentation) ->
@@ -326,6 +353,12 @@ class PresentationsBrowser extends Backbone.View
       @make 'div',
         class: 'slide-thumb',
         marked slides[0]
+
+  # Toggles visibility, which in order to achieve the desired effect,
+  # it consists of toggling classes outside of this component
+  toggleVisible: ->
+    $('body').toggleClass 'far'
+    $('.overlay').toggle()
 
 # ---
 
@@ -351,7 +384,8 @@ class Router extends Backbone.Router
     ':id'        : 'open'
     ':id/:slide' : 'open'
 
-  # Get the last presentating the user is editing and
+  # If there's any presentation recorded as the last being edited
+  # in Factory.Settings, open it, otherwise create a new one
   home: ->
     editing = Factory.Settings.attributes.editing
     if editing?
