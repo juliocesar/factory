@@ -1,0 +1,15 @@
+{
+  "name"        : "Factory",
+  "version"     : "0.0.1",
+  "description" : "In-browser presentation editing and publishing",
+  "author"      : "Julio Cesar Ody",
+  "license"     : "MIT",
+  "dependencies": {
+    "coffee-script"     : "~1.4.0",
+    "browserver"        : "git://github.com/jed/browserver-node.git",
+    "browserver-router" : "git://github.com/jed/browserver-router.git",
+    "node-static"       : "latest",
+    "engine.io"         : "~0.1.2",
+    "engine.io-client"  : "~0.1.2"
+  }
+}
