@@ -87,6 +87,19 @@
     return this;
   };
 
+  Factory.Server = http.createServer(function(req, res) {
+    if (req.method !== 'GET') {
+      res.writeHead(405, {
+        'Content-Type': 'text/plain'
+      });
+      return res.end('Method not allowed');
+    }
+    res.writeHead(200, {
+      'Content-Type': 'text/plain'
+    });
+    return res.end('Hola');
+  });
+
   Editor = (function(_super) {
 
     __extends(Editor, _super);
@@ -406,7 +419,7 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         presentationId = _ref[_i];
-        if (presentationId === 'Settings') {
+        if (presentationId === 'Settings' || presentationId === 'debug') {
           continue;
         }
         _results.push(this.add(Presentation.find(presentationId)));
@@ -502,7 +515,7 @@
     };
 
     Router.prototype["new"] = function() {
-      return Factory.open(new Presentation, 0);
+      return this.navigate((new Presentation).url(), true);
     };
 
     return Router;
@@ -527,6 +540,10 @@
     });
     Factory.Settings = new Settings;
     Factory.Router = new Router;
+    window.socket = new eio.Socket({
+      host: location.host
+    });
+    Factory.Server.listen(socket);
     Factory.Settings.fetch();
     catchLinkClicks();
     return Backbone.history.start({

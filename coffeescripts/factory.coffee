@@ -81,6 +81,18 @@ localStorageSync = (method, model, rest...) ->
 
 # ---
 
+# The in-browser HTTP server
+Factory.Server = http.createServer (req, res) ->
+
+  if req.method isnt 'GET'
+    res.writeHead 405, 'Content-Type': 'text/plain'
+    return res.end 'Method not allowed'
+
+  res.writeHead 200, 'Content-Type': 'text/plain'
+  res.end 'Hola'
+
+# ---
+
 # The slide text editor
 class Editor extends Backbone.View
 
@@ -329,7 +341,7 @@ class PresentationsBrowser extends Backbone.View
   loadPresentations: ->
     @$el.empty()
     for presentationId in _.keys localStorage
-      continue if presentationId is 'Settings'
+      continue if presentationId in ['Settings', 'debug']
       @add Presentation.find presentationId
 
   # Adds a single presentation model instance to the presentations
@@ -400,10 +412,10 @@ class Router extends Backbone.Router
     if presentation = Presentation.find presentationId
       Factory.open presentation, +slideNumber
 
-  # Creates a new presentation and opens the first slide in
-  # it (number zero)
+  # Creates a new presentation and opens it by navigating to
+  # it's URL
   new: ->
-    Factory.open new Presentation, 0
+    @navigate (new Presentation).url(), true
 
 # ---
 
@@ -416,6 +428,11 @@ $ ->
   Factory.Browser       = new PresentationsBrowser el: $('.presentations-browser')
   Factory.Settings      = new Settings
   Factory.Router        = new Router
+
+  # Create a new WebSocket connection
+  socket = new eio.Socket host: location.host
+
+  Factory.Server.listen socket
 
   # Ensure settings are loaded
   Factory.Settings.fetch()
