@@ -523,6 +523,7 @@
   })(Backbone.Router);
 
   $(function() {
+    var socket;
     Factory.Editor = new Editor({
       el: $('.writing textarea')
     });
@@ -540,7 +541,7 @@
     });
     Factory.Settings = new Settings;
     Factory.Router = new Router;
-    window.socket = new eio.Socket({
+    socket = new eio.Socket({
       host: location.host
     });
     Factory.Server.listen(socket);
