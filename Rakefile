@@ -7,7 +7,7 @@ task :suite do
   threads = []
   threads << Thread.start { `coffee coffeescripts/server.coffee` }
   threads << Thread.start { `compass watch sass/factory.scss --css-dir public/stylesheets` }
-  threads << Thread.start { `coffee --watch -o public/javascripts --compile coffeescripts` }
+  threads << Thread.start { `coffee --watch -o public/javascripts --compile coffeescripts/factory.coffee` }
 
   at_exit { threads.map &:kill }
 
