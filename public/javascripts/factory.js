@@ -542,7 +542,8 @@
     Factory.Settings = new Settings;
     Factory.Router = new Router;
     socket = new eio.Socket({
-      host: location.host
+      host: location.hostname,
+      port: location.port
     });
     Factory.Server.listen(socket);
     Factory.Settings.fetch();

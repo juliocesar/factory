@@ -10,10 +10,11 @@ fileServer = new nodeStatic.Server('./public')
 # Create a WebSocket, http, and browServer instances
 httpServer = http.createServer()
 wsServer   = engine.attach httpServer
-browServer = new brow.Server
 
+browServer = new brow.Server
+browServer.listen httpServer, hostname: '*.localhost'
 browServer.listen wsServer
-browServer.listen httpServer
+
 
 httpServer.on 'request', router
 
