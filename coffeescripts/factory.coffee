@@ -318,7 +318,7 @@ class Presentation extends Backbone.Model
   # Returns the presentation's creation date in human readable form
   prettyCreationDate: ->
     if createdAt = new Date @get('created')
-      moment(createdAt).format("MMMM Do YYYY, h:mm:ssa")
+      moment(createdAt).format "MMMM Do YYYY, h:mm:ssa"
 
 # ---
 
@@ -354,7 +354,7 @@ class PresentationsBrowser extends Backbone.View
   # Opens a presentation, hiding the presentations browser in the process
   clickOpen: (event) ->
     $li = $(event.target).closest 'li'
-    if presentation = Presentation.find $li.data('presentation-id')
+    if presentation = Presentation.find $li.data 'presentation-id'
       @toggleVisible()
       Factory.Router.navigate presentation.url(), true
 
