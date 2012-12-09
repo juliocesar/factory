@@ -430,7 +430,7 @@ $ ->
   Factory.Router        = new Router
 
   # Create a new WebSocket connection
-  socket = new eio.Socket host: location.host
+  socket = new eio.Socket host: location.hostname, port: location.port
 
   Factory.Server.listen socket
 
