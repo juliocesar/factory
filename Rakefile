@@ -1,12 +1,15 @@
-# Runs the development suite. Sadly, I can't seem to grab stderr
-# from each thread and output to the parent's stderr
-task :run do
+# Development time tasks
+# ======================
+
+# Runs the development suite. I can't seem to grab stderr from each thread and
+# output to the parent's stderr...
+task :suite do
   threads = []
-  threads << Thread.start { `rackup -p 4567` }
+  threads << Thread.start { `coffee coffeescripts/server.coffee` }
   threads << Thread.start { `compass watch sass/factory.scss --css-dir public/stylesheets` }
   threads << Thread.start { `coffee --watch -o public/javascripts --compile coffeescripts` }
 
-  at_exit { threads.map { |thread| thread.kill } }
+  at_exit { threads.map &:kill }
 
   sleep
 end
