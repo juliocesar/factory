@@ -1,44 +1,44 @@
 // Mixins
 // ======
 
-@mixin transition($prop, $time, $alg) {
-  -webkit-transition: $prop $time $alg;
-  -moz-transition: $prop $time $alg;
-  -ms-transition: $prop $time $alg;
-  transition: $prop $time $alg
-}
-
 @mixin translate($x, $y) {
-  -webkit-transform: translate($x, $y);
-  -moz-transform: translate($x, $y);
-  -ms-transform: translate($x, $y);
-  transform: translate($x, $y)
+  -webkit-transform : translate($x, $y);
+  -moz-transform    : translate($x, $y);
+  -ms-transform     : translate($x, $y);
+  transform         : translate($x, $y)
 }
 
 @mixin transform-origin($x, $y) {
-  -webkit-transform-origin: 50% 50%;
-  -moz-transform-origin: 50% 50%;
-  -ms-transform-origin: 50% 50%;
-  transform-origin: 50% 50%
+  -webkit-transform-origin : 50% 50%;
+  -moz-transform-origin    : 50% 50%;
+  -ms-transform-origin     : 50% 50%;
+  transform-origin         : 50% 50%
 }
 
 @mixin scale($ratio) {
-  -webkit-transform: scale($ratio);
-  -moz-transform: scale($ratio);
-  -ms-transform: scale($ratio);
-  transform: scale($ratio)
+  -webkit-transform : scale($ratio);
+  -moz-transform    : scale($ratio);
+  -ms-transform     : scale($ratio);
+  transform         : scale($ratio)
 }
 
-@mixin vendor-transform($transform) {
-  -webkit-transform: $transform;
-  -moz-transform: $transform;
-  -ms-transform: $transform;
-  transform: $transform
+@mixin vendor-transition($parameters) {
+  -webkit-transition : $parameters;
+  -moz-transition    : $parameters;
+  -ms-transition     : $parameters;
+  transition         : $parameters
 }
 
-@mixin vendor-filter($filter) {
-  -webkit-filter: $filter;
-  -moz-filter: $filter;
-  -ms-filter: $filter;
-  filter: $filter
+@mixin vendor-transform($parameters) {
+  -webkit-transform : $parameters;
+  -moz-transform    : $parameters;
+  -ms-transform     : $parameters;
+  transform         : $parameters
+}
+
+@mixin vendor-filter($parameters) {
+  -webkit-filter : $parameters;
+  -moz-filter    : $parameters;
+  -ms-filter     : $parameters;
+  filter         : $parameters
 }

@@ -8,11 +8,11 @@
 
 // Depth of view effect for when showing the presentations browser
 body {
-  @include transition(all, 0.25s, linear);
+  @include vendor-transition(all 0.25s linear);
   @include transform-origin(50%, 50%);
 
   .presentations-browser {
-    @include transition(all, 0.25s, linear);
+    @include vendor-transition(all 0.25s linear);
     @include vendor-transform(scale(.9) translate(-50%, -50%));
     opacity: 0;
     pointer-events: none;
@@ -59,7 +59,7 @@ body.theme-default {
 
     menu {
       button, a {
-        @include transition(color, 0.25s, linear);
+        @include vendor-transition(color 0.25s linear);
         color: rgba($text-color, .6);
 
         &:hover, &.section-visible {
@@ -72,7 +72,7 @@ body.theme-default {
       border-bottom: 1px dashed $text-color;
 
       a {
-        @include transition(background, 0.25s, linear);
+        @include vendor-transition(background 0.25s linear);
 
         &:hover {
           background: rgba(black, .05);
@@ -87,7 +87,7 @@ body.theme-default {
     }
 
     textarea {
-      @include transition(background, 0.25s, linear);
+      @include vendor-transition(background 0.25s linear);
       border: 0;
       background: transparent;
       color: darken($text-color, 5%);
