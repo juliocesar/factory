@@ -32,18 +32,16 @@ html, body { height: 100%; overflow: hidden }
 }
 .slide-container { right: 0 }
 
-body.editing {
-  .authoring       { width: 40% }
-  .slide-container { left: 40% }
-}
-
-
 // ---
 
 // Authoring
-
 .authoring {
+  @include vendor-transition(opacity 350ms ease-out);
   padding-top: $standard-spacing*4;
+  width: 40%;
+  opacity: 0;
+
+  .editing & { opacity: 1 }
 
   .writing, .slides {
     display: none;
@@ -110,7 +108,14 @@ body.editing {
 // Slide container
 
 .slide-container {
-  margin: 0 $standard-spacing*2 0 $standard-spacing*2;
+  @include vendor-transition(left 500ms ease-out);
+  margin: 0 $standard-spacing*4 0 $standard-spacing*4;
+  left: 0;
+
+  .editing & {
+    left: 40%;
+    margin: 0 $standard-spacing*2 0 $standard-spacing*2
+  }
 
   .slide {
     @include translate(-50%, -75%);
