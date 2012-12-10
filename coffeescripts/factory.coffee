@@ -40,6 +40,17 @@ window.Factory =
     # there's no other way
     Factory.Browser.loadPresentations()
 
+  # Switches off editing, hiding the components and enabling left
+  # and right arrows.
+  play: ->
+    $body.removeClass 'editing'
+
+# ---
+
+# Cache a reference of the document and it's body
+$document = $ document
+$body     = $ 'body'
+
 DEFAULT_SLIDE = """
   # Introducing Factory
 
@@ -82,14 +93,20 @@ localStorageSync = (method, model, rest...) ->
 # ---
 
 # The in-browser HTTP server
-Factory.Server = http.createServer (req, res) ->
+server = http.createServer()
 
+server.once 'request', (req) ->
+  console.log "CONNECTED: #{req.headers.host}"
+
+server.on 'request', (req, res) ->
   if req.method isnt 'GET'
     res.writeHead 405, 'Content-Type': 'text/plain'
     return res.end 'Method not allowed'
 
   res.writeHead 200, 'Content-Type': 'text/plain'
   res.end 'Hola'
+
+Factory.Server = server
 
 # ---
 
@@ -146,6 +163,9 @@ class Editor extends Backbone.View
 # The right-hand part where the current slide gets shown.
 class SlideViewer extends Backbone.View
 
+  initialize: ->
+    @bindNavigationKeys()
+
   # Creates a new slide
   createSlide: (markdown) ->
     @$el.empty()
@@ -161,6 +181,33 @@ class SlideViewer extends Backbone.View
   # and prints the markup to the stage
   updateSlide: (markdown) ->
     @currentSlide().html marked markdown
+
+  # Binds left and right arrow keys to back/forward slides
+  bindNavigationKeys: ->
+    $document.on 'keyup', (event) =>
+      return if @isEditing()
+      @nextSlide() if event.keyCode is 39
+      @previousSlide() if event.keyCode is 37
+
+  # True/false if Factory is in editing mode or not
+  isEditing: ->
+    $body.is '.editing'
+
+  # Navigates to the next slide
+  nextSlide: ->
+    presentation = Factory.currentPresentation
+    currentSlide = Factory.currentSlide
+    slides = presentation.get 'slides'
+    return false if currentSlide+1 is slides.length
+    Factory.Router.navigate presentation.url(++currentSlide), true
+
+  # Navigates to the previous slide
+  previousSlide: ->
+    presentation = Factory.currentPresentation
+    currentSlide = Factory.currentSlide
+    slides = presentation.get 'slides'
+    return false if currentSlide is 0
+    Factory.Router.navigate presentation.url(--currentSlide), true
 
 # ---
 
@@ -231,10 +278,12 @@ class SlidesBrowser extends Backbone.View
 class MainMenu extends Backbone.View
 
   events:
+    'click .play'                 : 'play'
     'click .show-slides'          : 'toggleSlides'
     'click .new-slide'            : 'createNewSlide'
     'click .delete-presentation'  : 'deletePresentation'
     'click .browse-presentations' : 'togglePresentationsBrowser'
+
 
   initialize: ->
     # We'll step out of our element for the sake of relevance
@@ -262,6 +311,8 @@ class MainMenu extends Backbone.View
   # Shows/hides the presentation browser
   togglePresentationsBrowser: ->
     Factory.Browser.toggleVisible()
+
+  play: Factory.play
 
 # ---
 
@@ -369,7 +420,7 @@ class PresentationsBrowser extends Backbone.View
   # Toggles visibility, which in order to achieve the desired effect,
   # it consists of toggling classes outside of this component
   toggleVisible: ->
-    $('body').toggleClass 'far'
+    $body.toggleClass 'far'
     $('.overlay').toggle()
 
 # ---
@@ -432,6 +483,7 @@ $ ->
   # Create a new WebSocket connection
   socket = new eio.Socket host: location.hostname, port: location.port
 
+  # Listen to connections coming from the server
   Factory.Server.listen socket
 
   # Ensure settings are loaded
@@ -440,4 +492,5 @@ $ ->
   # Fix link clicks (see Helpers at the top)
   catchLinkClicks()
 
+  # Start Backbone.Router
   Backbone.history.start pushState: true
